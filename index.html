@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>香港三日 · 家庭行程地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F3F4F1; --surface:#FFFFFF; --surface2:#EBEDE8; --ink:#16202A; --muted:#5B6673; --line:#D7DBD6;
+  --sea:#BCD3E6; --land:#F4F5EF; --peak:#E6EBDF; --accent:#D9263F; --ok:#2E8B57;
+  --shadow:0 1px 2px rgba(20,30,40,.06), 0 8px 24px rgba(20,30,40,.08);
+  --cA:#1F6FB2; --cB:#1B8A7A; --cC:#5B4FB5; --cD:#D9263F; --cE:#E3792B; --cF:#B8921C; --cG:#8B4A2B; --cH:#4E8A3A;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono","SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121820; --surface:#1B232D; --surface2:#222C37; --ink:#E8ECEF; --muted:#9AA5B1; --line:#2B3541;
+    --sea:#0C1622; --land:#26313C; --peak:#2E3B48; --accent:#F0526B; --ok:#5FC08A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    --cA:#4C93D6; --cB:#3BAE9C; --cC:#8D82E0; --cD:#F0526B; --cE:#F0955A; --cF:#D9B23A; --cG:#B87652; --cH:#7BB765;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121820; --surface:#1B232D; --surface2:#222C37; --ink:#E8ECEF; --muted:#9AA5B1; --line:#2B3541;
+  --sea:#0C1622; --land:#26313C; --peak:#2E3B48; --accent:#F0526B; --ok:#5FC08A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  --cA:#4C93D6; --cB:#3BAE9C; --cC:#8D82E0; --cD:#F0526B; --cE:#F0955A; --cF:#D9B23A; --cG:#B87652; --cH:#7BB765;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;padding-inline:clamp(16px,3vw,40px);padding-block:0 48px}
+a{color:inherit}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:22px 14px;border-bottom:1px solid var(--line)}
+header.top h1{font-size:clamp(24px,3vw,34px);line-height:1.2}
+header.top .sub{color:var(--muted);font-size:14px;margin-top:4px}
+.meta{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-block:14px 18px;border-bottom:1px solid var(--line)}
+nav.tabs button{appearance:none;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font:inherit;font-weight:500;padding:10px 14px;cursor:pointer;margin-bottom:-1px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+section[role="tabpanel"]{max-width:1400px;margin-inline:auto}
+
+/* MAP TAB */
+.maplayout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.85fr);gap:18px;align-items:start}
+@media (max-width:900px){.maplayout{grid-template-columns:1fr}}
+.mapcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.mapcard svg{display:block;width:100%;height:auto;background:var(--sea);touch-action:none;cursor:grab}
+.mapcard svg.dragging{cursor:grabbing}
+.maptools{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.maptools button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 18px var(--mono);cursor:pointer;box-shadow:var(--shadow)}
+.maptools button:focus-visible{outline:2px solid var(--accent)}
+.maplegend{position:absolute;left:10px;bottom:10px;background:color-mix(in srgb,var(--surface) 92%,transparent);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;max-width:calc(100% - 20px)}
+.maplegend span{display:inline-flex;align-items:center;gap:5px}
+.lg{width:11px;height:11px;display:inline-block;border:1.5px solid var(--ink);background:var(--surface)}
+.lg.food{border-radius:50%}.lg.sight{transform:rotate(45deg);border-radius:2px}.lg.stay{border-radius:3px;background:var(--ink)}.lg.transit{width:0;height:0;border:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid var(--ink)}
+.mapbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] .dot{outline:2px solid var(--bg)}
+.toggle{display:inline-flex;align-items:center;gap:6px;color:var(--muted);margin-left:auto;cursor:pointer}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:16px 18px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+@media (max-width:900px){.panel{position:static;max-height:none}}
+.panel .eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.panel .eyebrow .sw{width:10px;height:10px;border-radius:2px;background:var(--c)}
+.panel h2{font-size:24px;margin-top:6px;line-height:1.25}
+.panel .addr{color:var(--muted);font-size:13px;margin-top:2px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.badge{font-size:12px;border-radius:5px;padding:2px 8px;background:var(--surface2);color:var(--ink)}
+.badge.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.badge.warn{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.kv{display:grid;grid-template-columns:72px 1fr;gap:6px 12px;margin-top:14px;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+.panel p.desc{margin:12px 0 0;font-size:14.5px}
+.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.links a{text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:500;background:var(--surface2)}
+.links a:hover{border-color:var(--ink)}
+.status{display:flex;gap:6px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);align-items:center;flex-wrap:wrap}
+.status span{font-size:12.5px;color:var(--muted);margin-right:4px}
+.status button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+.status button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.status button.no[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.status button.go[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.hint{color:var(--muted);font-size:13.5px}
+.poilist{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.clcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.clcard header{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:10px;border-top:4px solid var(--c)}
+.clcard header .letter{font-family:var(--serif);font-size:22px;color:var(--c);font-weight:700}
+.clcard header h3{font-size:16px;font-family:var(--sans);font-weight:700}
+.clcard header small{color:var(--muted);font-size:12px;margin-left:auto;font-family:var(--mono)}
+.clcard ul{list-style:none;margin:0;padding:6px 0}
+.clcard li{display:flex;align-items:center;gap:10px;padding:7px 14px;cursor:pointer;font-size:14px}
+.clcard li:hover{background:var(--surface2)}
+.clcard li .lg{flex:none;border-color:var(--c)}
+.clcard li .lg.stay{background:var(--c)}.clcard li .lg.transit{border-bottom-color:var(--c)}
+.clcard li .nm{flex:1;min-width:0}
+.clcard li .hrs{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.clcard li.no{opacity:.45;text-decoration:line-through}
+.clcard li.go .nm::after{content:" ✓";color:var(--ok);font-weight:700}
+.clcard li[aria-current="true"]{background:var(--surface2);box-shadow:inset 3px 0 0 var(--c)}
+
+/* ITINERARY */
+.days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.days{grid-template-columns:1fr}}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.day>header{padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+.day>header .dn{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.day>header h3{font-size:20px;margin-top:2px}
+.day>header p{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.tl{list-style:none;margin:0;padding:8px 16px 14px}
+.tl li{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:start}
+.tl li:last-child{border-bottom:0}
+.tl .t{font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:2px}
+.tl .what{font-size:14.5px}
+.tl .what b{font-weight:700}
+.tl .what .cl{display:inline-block;font-family:var(--mono);font-size:11px;color:#fff;background:var(--c);border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px}
+.tl .what .opt{display:inline-block;font-size:11.5px;color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:0 6px;margin-left:6px}
+.tl .what small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.note{background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:14px;margin:16px 0 0}
+.note b{font-weight:700}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+.card h3{font-size:18px;margin-bottom:8px}
+.card p{margin:6px 0;font-size:14.5px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:10px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:12.5px;letter-spacing:.03em}
+td.mono,th.mono{font-family:var(--mono);font-size:13px;white-space:nowrap}
+tr.pick td{background:color-mix(in srgb,var(--ok) 10%,transparent)}
+.tablewrap{overflow-x:auto}
+ul.plain{margin:8px 0 0;padding-left:20px}
+ul.plain li{margin:4px 0;font-size:14.5px}
+.decide{display:grid;gap:12px}
+.decide .card{display:grid;grid-template-columns:28px 1fr;gap:12px}
+.decide .num{font-family:var(--serif);font-size:22px;color:var(--accent);font-weight:700;line-height:1.1}
+.decide h3{font-size:17px;margin-bottom:4px}
+footer{margin-top:36px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:12px;max-width:1400px;margin-inline:auto}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:4px 8px;border-radius:5px;transform:translate(-50%,-140%);white-space:nowrap;z-index:9;display:none}
+.pin{cursor:pointer}
+.pin.no{opacity:.28}
+.pin.sel .core{stroke:var(--ink);stroke-width:2.5}
+.pin.go .ring{display:block}
+.pin .ring{display:none}
+.lbl{font-family:var(--sans);font-size:10.5px;fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.stn{font-family:var(--mono);font-size:9.5px;fill:var(--muted);paint-order:stroke;stroke:var(--land);stroke-width:2.5px;pointer-events:none}
+.cll{font-family:var(--serif);font-weight:700;font-size:15px;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+.sea-lbl{font-family:var(--serif);font-size:14px;fill:color-mix(in srgb,var(--muted) 70%,transparent);letter-spacing:.3em;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){.pin .core{transition:r .15s}}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:14px}
+.photos figure{margin:0}
+.photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;cursor:zoom-in;display:block;background:var(--surface2)}
+.photos figcaption{font-size:11px;color:var(--muted);margin-top:3px}
+.lb{position:fixed;inset:0;background:rgba(10,14,18,.92);z-index:50;display:grid;grid-template-rows:1fr auto;place-items:center;padding:16px}
+.lb img{max-width:min(96vw,1100px);max-height:78vh;object-fit:contain;border-radius:6px}
+.lb .lbcap{color:#E8ECEF;text-align:center;font-size:14px;max-width:800px;padding:8px 0 4px}
+.lb .lbcap small{color:#9AA5B1}
+.lb .lbn{position:absolute;top:14px;left:18px;color:#9AA5B1;font-size:13px}
+.lb button{position:absolute;background:rgba(255,255,255,.1);color:#fff;border:0;border-radius:50%;width:44px;height:44px;font-size:26px;cursor:pointer}
+.lb .lbx{top:12px;right:12px}.lb .lbp{left:12px;top:50%;transform:translateY(-50%)}.lb .lbq{right:12px;top:50%;transform:translateY(-50%)}
+.clcard li .th{width:44px;height:34px;object-fit:cover;border-radius:4px;flex:none;background:var(--surface2)}
+
+</style>
+
+<header class="top">
+  <div>
+    <h1>香港三日 · 家庭行程地圖</h1>
+    <div class="sub">2026 年 11 月 14 日（六）到 16 日（一）· 6 位大人 · 住灣仔 · 16 日傍晚高鐵去廣州</div>
+  </div>
+  <div class="meta">
+    <span>資料查證 <b>2026-09-16</b></span>
+    <span>HK$1 ≈ <b>RM 0.54</b></span>
+    <span>11 月日落 <b>約 17:45</b></span>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="分頁">
+  <button role="tab" aria-selected="true" aria-controls="tab-map" id="tb-map">區塊地圖</button>
+  <button role="tab" aria-selected="false" aria-controls="tab-plan" id="tb-plan">三日行程</button>
+  <button role="tab" aria-selected="false" aria-controls="tab-move" id="tb-move">交通與時間</button>
+  <button role="tab" aria-selected="false" aria-controls="tab-decide" id="tb-decide">今晚要決定的事</button>
+</nav>
+
+<section role="tabpanel" id="tab-map" aria-labelledby="tb-map">
+  <div class="maplayout">
+    <div>
+      <div class="mapcard">
+        <div class="mapbar" id="filters"></div>
+        <div class="maptools">
+          <button id="zin" aria-label="放大">+</button>
+          <button id="zout" aria-label="縮小">−</button>
+          <button id="zreset" aria-label="重設" style="font-size:13px">⟲</button>
+        </div>
+        <svg id="map" viewBox="0 0 1000 1010" role="img" aria-label="香港示意地圖，標出八個區塊與景點餐廳"></svg>
+        <div class="maplegend">
+          <span><i class="lg food"></i>吃</span>
+          <span><i class="lg sight"></i>走走看看</span>
+          <span><i class="lg stay"></i>飯店</span>
+          <span><i class="lg transit"></i>交通</span>
+          <span>滾輪縮放 · 拖曳移動 · 點圖釘看詳情 · 放大後自動顯示名稱</span>
+        </div>
+      </div>
+      <div class="poilist" id="poilist"></div>
+    </div>
+    <aside class="panel" id="panel"></aside>
+  </div>
+</section>
+
+<section role="tabpanel" id="tab-plan" aria-labelledby="tb-plan" hidden>
+  <div class="days" id="days"></div>
+  <div class="note"><b>三個前提：</b>太太一家不吃牛，清單裡只靠牛肉出名的店已經拿掉（九記牛腩、誠記沙嗲牛肉麵、新香園蛋牛治），有牛也有別的店會標 🐂 提醒；不買奢侈品，但看一次商場；同一區好吃的多就隔天再回去，行程只是骨架。<br><b>排法的原則：</b>一個半天只待一個區塊，區塊裡全部走路。吃在老店，吃完走幾步到同區能坐的地方（茶樓、咖啡店、公園）。每天都留了「長輩可略」的段落，累了就砍，年輕人自己去。</div>
+  <div class="two">
+    <div class="card">
+      <h3>星期幾要小心的休息日</h3>
+      <ul class="plain">
+        <li><b>星期日（11/15）休：</b>蘭芳園總店、再興燒臘、九記牛腩。炳記茶檔只開到 15:00。</li>
+        <li><b>星期三休：</b>一樂燒鵝、美都餐室（你們不在，無影響）。</li>
+        <li><b>星期四休：</b>澳洲牛奶公司（無影響）。</li>
+        <li>所以再興只能星期六，蘭芳園和陸羽只能星期一早上。行程已照這個排。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>太平山怎麼處理</h3>
+      <p>山頂纜車是在地面軌道上跑的「纜索鐵路」，不是吊在半空的纜車，但坡度很陡，怕的人一樣會怕。替代方案：中環交易廣場搭 <b>15 號雙層巴士</b>上山，約 40 分鐘，一人十幾塊港幣，坐上層前排本身就是風景。</p>
+      <p><b>我的建議是這次不上山。</b>兩晚維港夜景已經夠了，把時間留給街道。想去的話放在星期一早上，取代陸羽早茶。</p>
+    </div>
+  </div>
+</section>
+
+<section role="tabpanel" id="tab-move" aria-labelledby="tb-move" hidden>
+  <div class="two">
+    <div class="card">
+      <h3>第一天：機場 → 灣仔</h3>
+      <table>
+        <tr><th class="mono">時間</th><th>動作</th></tr>
+        <tr><td class="mono">12:20</td><td>落地。下機走到入境大堂約 20–25 分鐘（中間有一段無人列車）</td></tr>
+        <tr><td class="mono">12:45</td><td>排入境人工櫃台，星期六抓 15–25 分鐘。不用填入境卡</td></tr>
+        <tr><td class="mono">13:10</td><td>行李通常已在轉盤上</td></tr>
+        <tr><td class="mono">13:20</td><td>出接機大堂，跟「巴士總站」指示走 3–5 分鐘到地面運輸中心</td></tr>
+        <tr class="pick"><td class="mono">13:30</td><td><b>A11 城巴</b>往北角碼頭，每 20–25 分鐘一班，HK$40／人，Octopus 或剛好現金。行李放樓下車頭行李架</td></tr>
+        <tr><td class="mono">14:25</td><td>「灣仔消防局」站（告士打道）下車，走 3–5 分鐘到 Harbourview</td></tr>
+        <tr><td class="mono">14:45</td><td>放好行李出門（正式 check-in 15:00，早到通常可寄行李或直接入住）</td></tr>
+      </table>
+      <p class="hint" style="margin-top:10px">備案：預訂 7 人座保姆車約 HK$700–900 全車，40–45 分鐘到門口；或兩台計程車各約 HK$350–400。</p>
+    </div>
+    <div class="card">
+      <h3>出發前要裝的</h3>
+      <ul class="plain">
+        <li><b>Octopus（八達通）：</b>iPhone 下載「Octopus for Tourists」，用馬來西亞 Visa／Mastercard 開卡加值，巴士、地鐵、小輪、便利店全用它。Android 到機場的機場快線客服中心買實體卡，HK$50 押金。</li>
+        <li><b>Google Maps：</b>香港的地鐵、巴士、小輪時刻都準，直接用。</li>
+        <li><b>OpenRice：</b>香港本地人的餐廳評價網，看排隊狀況和最新營業時間。</li>
+        <li><b>Trip.com 或 Klook：</b>買高鐵票（11/1 左右開售）。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>天星小輪（飯店旁邊的灣仔碼頭）</h3>
+      <p>灣仔 ↔ 尖沙咀 8 分鐘，約 07:30 到 22:50–23:00，6–10 分鐘一班，HK$5–6.5。晚上從尖沙咀回飯店就靠這條，順便看維港夜景。中環 7 號碼頭 ↔ 尖沙咀另有一條，晚到 23:30。</p>
+      <p><b>叮叮車：</b>HK$3 一趟，任何一站上，下車拍卡。從灣仔軒尼詩道往西坐到中環、上環、西環，二樓靠窗。</p>
+    </div>
+    <div class="card">
+      <h3>第三天：西九龍 → 廣州（目前時刻表，11/1 開售時再確認）</h3>
+      <div class="tablewrap"><table>
+        <tr><th>車次</th><th class="mono">西九龍</th><th>到站</th><th class="mono">到達</th><th>到飯店約</th></tr>
+        <tr class="pick"><td class="mono">G6550</td><td class="mono">18:54</td><td><b>廣州東</b>（天河市中心）</td><td class="mono">20:26</td><td class="mono">21:00</td></tr>
+        <tr><td class="mono">G6588</td><td class="mono">19:43</td><td>廣州南（番禺，離市區 45 分鐘）</td><td class="mono">21:08</td><td class="mono">22:15</td></tr>
+        <tr><td class="mono">G6532</td><td class="mono">20:57</td><td>廣州南</td><td class="mono">22:03</td><td class="mono">23:15</td></tr>
+        <tr><td class="mono">尾班</td><td class="mono">22:37</td><td>廣州南</td><td class="mono">約 23:40</td><td class="mono">凌晨</td></tr>
+      </table></div>
+      <ul class="plain">
+        <li><b>選 18:54 到廣州東。</b>它是最後一班到市中心的車；再晚的都到廣州南，下車還要 45 分鐘進城，反而更晚到床上。</li>
+        <li>西九龍站要提早 <b>60–80 分鐘</b>：香港出境、中國入境在同一個站內連續辦完，之後不用再過關。</li>
+        <li>二等座約 RM 117–140／人。6 個人的護照資料要一起填，名字照護照拼。</li>
+        <li>行李：每人 20 kg、單件長寬高合計不超過 130 cm，一般 28 吋箱剛好。</li>
+        <li>所以第三天在香港玩到 <b>約 16:30</b>，回飯店拿行李，17:00 計程車出發。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section role="tabpanel" id="tab-decide" aria-labelledby="tb-decide" hidden>
+  <div class="decide">
+    <div class="card"><div class="num">1</div><div><h3>機票：國泰 08:15 去、10:15 回，每人 RM 1,430</h3><p>Trip.com 多城市票，兩程都含 23 kg。回程是廣州飛香港轉機，多 2 小時但同一張票、行李直掛。02:55 那班同價，但全家一夜沒睡換來的是香港最沒看頭的早上，不划算。</p></div></div>
+    <div class="card"><div class="num">2</div><div><h3>飯店：灣仔 Harbourview YMCA，RM 516／房／晚（含稅）</h3><p>三間房兩晚約 RM 3,500。旁邊就是灣仔碼頭和金紫荊廣場，房間比九龍同價位大。備選：旺角 Stanford Hotel RM 708 含早餐。否決荔枝角 Hotel YX：房間 10 m²、走 10 分鐘地鐵、7 月有衛生差評。</p></div></div>
+    <div class="card"><div class="num">3</div><div><h3>房型：1 雙人床 ＋ 2 雙單人床</h3><p>Ryan 夫妻一間、兩位舅子一間、岳父岳母一間。三間一起訂，備註同一層。香港不訂 Airbnb（28 天以下短租要牌照，多數是無牌，有被取消和不讓進的風險）。</p></div></div>
+    <div class="card"><div class="num">4</div><div><h3>太平山：去或不去</h3><p>建議不去。要去就星期一早上搭 15 號巴士上山，取代陸羽早茶。</p></div></div>
+    <div class="card"><div class="num">4b</div><div><h3>商場看一眼：K11 MUSEA（第一天）＋希慎、時代廣場（第二天）</h3><p>不買奢侈品，但想看一次香港商場長什麼樣，這三個就夠，都在既有路線上，各 10–20 分鐘。</p><p><b>一個要挑戰你的點：</b>「東西都在廣州買」對衣服、日用品、淘寶類是對的，但電子產品、化妝品、保健品、進口貨在香港便宜：香港免稅，中國內地有 13% 增值稅加進口關稅，而且香港的正貨保證比較穩。如果家裡有人想買 iPhone、相機、藥油、奶粉這類，留在香港買。</p></div></div>
+    <div class="card"><div class="num">5</div><div><h3>地圖上哪些點要砍</h3><p>回到「區塊地圖」分頁，每個點都能按「去／不去／待定」，狀態會存在這台電腦的瀏覽器裡。砍完剩下的就是最終版，我再排進逐時行程。</p></div></div>
+    <div class="card" style="grid-column:1/-1;display:block"><h3>小紅書那兩篇貼文的比對</h3>
+      <p class="hint">「香港 96 小時吃了什麼」12 家全部看完；「12 家傳奇小店」那篇是影片，只看得到封面（Owl's 泡芙），店名在影片裡，要你自己截圖給我。</p>
+      <div class="tablewrap"><table>
+        <tr><th>店</th><th>區</th><th>原本在不在清單</th><th>我的判斷</th></tr>
+        <tr class="pick"><td>Bakehouse 蛋撻</td><td>A 灣仔</td><td>沒有 → 已加</td><td>值得排一次，第一天下午順路，派兩人去排</td></tr>
+        <tr class="pick"><td>華嫂冰室</td><td>D 尖沙咀</td><td>沒有 → 已加</td><td>比澳洲牛奶適合 6 人，星期日晚餐候選</td></tr>
+        <tr class="pick"><td>池記 雲吞麵</td><td>D 尖沙咀</td><td>沒有 → 已加</td><td>好坐、乾淨，第一天晚餐候選</td></tr>
+        <tr class="pick"><td>通達／嘉多娜／和順記</td><td>D 油麻地碧街</td><td>沒有 → 已加</td><td>三家 50 米內，星期日傍晚一次掃完</td></tr>
+        <tr><td>Owl's 泡芙</td><td>D 尖沙咀</td><td>沒有 → 已加</td><td>常撲空，經過才試，不特地去</td></tr>
+        <tr><td>金輝點心</td><td>A 灣仔</td><td>沒有 → 已加</td><td>第三天陸羽的平價替代；一家分店傳結業，去前確認</td></tr>
+        <tr><td>明華餅家 燒餅</td><td>E 旺角</td><td>沒有 → 已加</td><td>只開到中午，現行程排不進</td></tr>
+        <tr><td>誠記 沙嗲牛筋麵</td><td>C 堅尼地城</td><td>沒有 → 已加</td><td>太偏西，除非叮叮車坐到底。優先度低</td></tr>
+        <tr><td>Silk 奶茶</td><td>連鎖</td><td>沒有</td><td>路上看到就買，不用排</td></tr>
+        <tr><td>火箭餐廳</td><td>迪士尼</td><td>沒有</td><td>不去迪士尼，略</td></tr>
+      </table></div>
+      <p class="hint" style="margin-top:8px">我們原本清單裡的老店（再興、陸羽、蘭芳園、一樂、美都、公和、合益泰、九龍城寨）那篇貼文都沒提。不是它們不好，是那位作者走的是網紅路線；你們要的港味老店，本地人的評價網 OpenRice 比小紅書準。</p>
+    </div>
+    <div class="card" style="grid-column:1/-1;display:block"><h3>小紅書第三篇「我會反覆去吃的 16 家」比對</h3>
+      <div class="tablewrap"><table>
+        <tr><th>店</th><th>原本在不在</th><th>我的判斷</th></tr>
+        <tr><td>Owl's 泡芙、明華餅家、通達、嘉多娜、和順記、Bakehouse</td><td>已在（第二篇也推）</td><td>兩篇都推，可信度高</td></tr>
+        <tr class="pick"><td>聰嫂私房（旺角）</td><td>沒有 → 已加，但改成灣仔真店</td><td>旺角那家是山寨，官方發過聲明。真店「聰。C Dessert」在灣仔莊士敦道，飯店走 8 分鐘，每晚收尾甜品</td></tr>
+        <tr class="pick"><td>泰沾麵（銅鑼灣希慎 B2）</td><td>沒有 → 已加</td><td>星期日晚餐候選，有冷氣好坐，點豚肉湯底</td></tr>
+        <tr class="pick"><td>肥仔記麵家（尖沙咀）</td><td>沒有 → 已加</td><td>比池記便宜，手打丸，第一天晚餐第三候選</td></tr>
+        <tr><td>旦王 酸辣粉（旺角）</td><td>沒有 → 已加</td><td>星期日下午順路小食</td></tr>
+        <tr><td>曲奇四重奏（旺角）</td><td>沒有 → 已加</td><td>伴手禮安全牌</td></tr>
+        <tr><td>Vission Bakery（中環）</td><td>沒有 → 已加</td><td>跟 Bakehouse 二選一，都是排隊西式烘焙</td></tr>
+        <tr><td>HeSheEat（旺角）</td><td>沒有 → 已加，低優先</td><td>網紅西式 cafe，招牌牛肉丼，長輩不會喜歡</td></tr>
+        <tr><td>金鳳大餐廳（佐敦）</td><td>沒有，不加</td><td>連鎖港式西餐，招牌牛柳餐，不吃牛就沒意思</td></tr>
+        <tr><td>西樹泡芙、洪瑞珍</td><td>沒有，不加</td><td>內地連鎖、台灣連鎖，馬來西亞也有類似的</td></tr>
+      </table></div>
+    </div>
+    <div class="card"><div class="num">7</div><div><h3>不吃牛：已經過濾</h3><p>只靠牛肉出名的店拿掉了三家：九記牛腩、誠記沙嗲牛肉麵、新香園蛋牛治。有牛也有別的好吃的店保留，點開會有 🐂 標記寫清楚點什麼。泰國菜和船麵點豬或雞就好。港式茶餐廳的「餐蛋」、「腸仔」、「豬扒」都無牛，放心。</p></div></div>
+    <div class="card"><div class="num">6</div><div><h3>第三天幾點走</h3><p>18:54 廣州東那班。想更晚只有廣州南可選，到飯店反而更晚。</p></div></div>
+  </div>
+</section>
+
+<footer>
+  營業時間標「✓ 已核實」的是 2026-09-16 當天查證；「待核實」的下一步逐一確認。票價和時刻以官方公告為準。地圖為示意圖，位置相對正確，不是精確比例。照片多數來自 Wikimedia Commons 與 Flickr 的 CC 授權作品，作者標在放大圖下方；標「小紅書實拍」的來自 Ryan 收藏的三篇貼文，僅供家人行前參考，旅程結束後本頁會刪除。標「示意」者為同類食物或附近街景，非該店本尊。
+</footer>
+<div class="tip" id="tip"></div>
+<div class="lb" id="lb" hidden role="dialog" aria-label="照片">
+  <button class="lbx" onclick="closeLB()" aria-label="關閉">×</button>
+  <button class="lbp" onclick="lbStep(-1)" aria-label="上一張">‹</button>
+  <img src="" alt="">
+  <button class="lbq" onclick="lbStep(1)" aria-label="下一張">›</button>
+  <div class="lbcap"></div><div class="lbn mono"></div>
+</div>
+
+<script>
+const CL = {
+  A:{name:'灣仔',color:'var(--cA)',hex:'#1F6FB2',desc:'飯店所在，全部走路。街市、藍屋、小巷咖啡、碼頭。'},
+  B:{name:'銅鑼灣 · 大坑',color:'var(--cB)',hex:'#1B8A7A',desc:'從灣仔走 20 分鐘。大坑是藏在鬧區後面的小村。'},
+  C:{name:'中環 · 上環 · 西營盤',color:'var(--cC)',hex:'#5B4FB5',desc:'叮叮車一路串起來。老茶樓、街市、太平山街。'},
+  D:{name:'尖沙咀 · 佐敦 · 油麻地',color:'var(--cD)',hex:'#D9263F',desc:'維港、燈光秀、茶餐廳老店、廟街夜市。'},
+  E:{name:'旺角 · 太子',color:'var(--cE)',hex:'#E3792B',desc:'早上花墟雀鳥，晚上霓虹人潮。'},
+  F:{name:'深水埗',color:'var(--cF)',hex:'#B8921C',desc:'最沒被觀光化的老香港。平價小食和布料街。'},
+  G:{name:'九龍城 · 宋皇臺',color:'var(--cG)',hex:'#8B4A2B',desc:'九龍城寨公園與電影場景展、小泰國、南蓮園池。'},
+  H:{name:'太平山（可選）',color:'var(--cH)',hex:'#4E8A3A',desc:'纜車或 15 號巴士上山。建議這次略過。'}
+};
+// type: food | sight | stay | transit
+const POIS = [
+ // A 灣仔
+ {id:'a-hotel',cl:'A',type:'stay',name:'The Harbourview（灣仔 YMCA）',lat:22.2803,lng:114.1722,addr:'港灣道 4 號',hours:'入住 15:00 · 退房 12:00',v:true,desc:'推薦的住宿。四星，評分 8.7，房間約 23 m²，比九龍同價位大。隔壁是灣仔碼頭和金紫荊廣場，天星小輪 8 分鐘到尖沙咀。',eat:'',note:'三間房兩晚約 RM 3,500（Trip.com，11/14–16 查價）。'},
+ {id:'a-a11',cl:'A',type:'transit',name:'A11 巴士站「灣仔消防局」',lat:22.2795,lng:114.1738,addr:'告士打道',hours:'A11 從機場 06:10–00:30，每 20–25 分',v:true,desc:'第一天下車的站。走 3–5 分鐘到飯店。回程往機場不需要（你們從廣州飛）。',eat:''},
+ {id:'a-pier',cl:'A',type:'sight',name:'灣仔碼頭 · 金紫荊廣場',lat:22.2826,lng:114.1748,addr:'會展中心旁',hours:'小輪約 07:30–23:00 · 燈光秀每晚 20:00',v:true,desc:'飯店隔壁。每晚 8 點的「幻彩詠香江」在這裡就能看，不用過海。天星小輪灣仔線在這上船。',eat:''},
+ {id:'a-market',cl:'A',type:'sight',name:'太原街 · 交加街露天街市',lat:22.2765,lng:114.1728,addr:'太原街、交加街',hours:'早上到傍晚',v:false,desc:'港劇裡那種街市：菜檔、玩具街、雜貨。飯店走 8 分鐘。金鳳茶餐廳就在旁邊的春園街。',eat:''},
+ {id:'a-blue',cl:'A',type:'sight',name:'藍屋',lat:22.2745,lng:114.1750,addr:'石水渠街 72–74A',hours:'外觀全日 · 香港故事館約 10:00–18:00',v:false,desc:'1920 年代唐樓，活化後還住著街坊。旁邊有小店和茶座可以坐。',eat:''},
+ {id:'a-starst',cl:'A',type:'sight',name:'星街 · 月街 · 日街',lat:22.2765,lng:114.1685,addr:'金鐘與灣仔之間的小坡',hours:'咖啡店多在 10:00–19:00',v:false,desc:'三條安靜的小斜路，咖啡店、小舖、老樹。午餐後坐一小時的地方。',eat:''},
+ {id:'a-joyhing',cl:'A',type:'food',name:'再興燒臘飯店',lat:22.2778,lng:114.1745,addr:'軒尼詩道 265–267 號地下',hours:'週一至六 09:30–22:00 · 週日休',v:true,desc:'百年燒臘老店，CNN 和米芝蓮都推。叉燒、燒肉、燒鴨腿飯。排隊、翻桌快、要搭枱。',eat:'叉燒飯、燒肉、油雞',note:'你們只有星期六（第一天）能吃到。6 人會拆桌。'},
+ {id:'a-kamfung',cl:'A',type:'food',name:'金鳳茶餐廳',lat:22.2764,lng:114.1732,addr:'春園街 41 號',hours:'約 06:45–19:00 · 待核實',v:false,desc:'灣仔人的早餐店。蛋撻、雞尾包、凍奶茶（不加冰的凍奶茶是招牌）。',eat:'蛋撻、雞尾包、凍奶茶'},
+ {id:'a-kam',cl:'A',type:'food',name:'甘牌燒鵝',lat:22.2780,lng:114.1738,addr:'軒尼詩道 226 號',hours:'約 11:30–21:30 · 待核實',v:false,desc:'鏞記家族分出來開的，米芝蓮一星燒鵝。比一樂近，就在飯店走 10 分鐘。',eat:'燒鵝、燒鵝瀨粉'},
+ {id:'a-honolulu',cl:'A',type:'food',name:'檀島咖啡餅店',lat:22.2782,lng:114.1722,addr:'軒尼詩道 176–178 號',hours:'約 06:00–22:00 · 待核實',v:false,desc:'1940 年開的老餅店茶餐廳，酥皮蛋撻 192 層是招牌。',eat:'酥皮蛋撻、奶茶'},
+ // B 銅鑼灣大坑
+ {id:'b-taihang',cl:'B',type:'sight',name:'大坑',lat:22.2790,lng:114.1905,addr:'銅鑼灣後方，天后站走 8 分鐘',hours:'全日 · 小店多 11:00–22:00',v:false,desc:'幾條窄巷組成的小村，咖啡店、小餐館、車房並存，本地人週末放空的地方。晚上吃飯、散步很舒服。',eat:''},
+ {id:'b-bing',beef:'豬扒麵、奶醬多都無牛',cl:'B',type:'food',name:'炳記茶檔',lat:22.2795,lng:114.1900,addr:'大坑安庶庇街 5 號',hours:'週二至日 07:00–15:00 · 週一休',v:true,desc:'1950 年代鐵皮大排檔，露天無冷氣。CNN「香港四大奶茶王」。陳奕迅常客。只做到下午 3 點，要去就是早餐或早午餐。',eat:'絲襪奶茶、豬扒麵、奶醬多',note:'星期日開。適合星期日早上，但行程排了深水埗，看你們選哪個。'},
+ {id:'b-tanglung',cl:'B',type:'food',name:'登龍街食街',lat:22.2785,lng:114.1830,addr:'銅鑼灣登龍街',hours:'晚上最熱鬧',v:false,desc:'一條街幾十家餐廳，港式、日式、火鍋都有，6 人晚餐找位子容易。',eat:'看當天想吃什麼'},
+ // C 中上環西營盤
+ {id:'c-tram',cl:'C',type:'transit',name:'叮叮車（電車）',lat:22.2823,lng:114.1610,addr:'軒尼詩道／德輔道中沿線',hours:'約 06:00–24:00',v:true,desc:'HK$3 一趟，任何站上，下車拍卡。從灣仔往西坐到中環、上環、西環，二樓靠窗。這 30 分鐘本身就是景點。',eat:''},
+ {id:'c-cmarket',cl:'C',type:'sight',name:'中環街市',lat:22.2843,lng:114.1555,addr:'德輔道中 93 號',hours:'約 10:00–22:00 · 待核實',v:false,desc:'活化後的老街市，有冷氣、有座位、有小店和小食。走累了在這裡坐。半山電梯的起點就在旁邊。',eat:''},
+ {id:'c-graham',cl:'C',type:'sight',name:'結志街 · 嘉咸街街市',lat:22.2835,lng:114.1535,addr:'中環嘉咸街',hours:'早上到傍晚',v:false,desc:'中環鬧市裡的露天街市，蘭芳園、九記都在旁邊。',eat:''},
+ {id:'c-lanfong',cl:'C',type:'food',name:'蘭芳園（總店）',lat:22.2833,lng:114.1535,addr:'結志街 2 號',hours:'07:30–18:00 · 週日休',v:true,desc:'1952 年開，絲襪奶茶的祖師爺。鐵皮檔加室內小店，港劇常客。',eat:'絲襪奶茶、豬扒包、蔥油雞扒撈丁',note:'星期日休，所以排星期一早上。'},
+ {id:'c-lukyu',cl:'C',type:'food',name:'陸羽茶室',lat:22.2823,lng:114.1560,addr:'士丹利街 24–26 號',hours:'07:00–22:00 · 點心到 18:00',v:true,desc:'1933 年開的老茶樓，穿白衫的老夥計、吊扇、卡座。一盅兩件慢慢吃，可以坐很久。價格比一般點心貴，但這是「體驗」。',eat:'蝦餃、叉燒包、豬潤燒賣、普洱',note:'帶長輩坐得久的首選。早茶 07:00–11:00 人少。'},
+ {id:'c-linheung',cl:'C',type:'food',name:'蓮香樓（新址）',lat:22.2860,lng:114.1520,addr:'德輔道中 249–251 號東寧大廈',hours:'待核實',v:true,desc:'百年推車點心茶樓。2026 年 4 月已從威靈頓街搬到德輔道中新址，舊址在重建。跟陸羽二選一就好。',eat:'推車點心、大包',note:'搬遷已核實，新址營業時間待核實。'},
+ {id:'c-yatlok',cl:'C',type:'food',name:'一樂燒鵝',lat:22.2822,lng:114.1553,addr:'士丹利街 34–38 號',hours:'10:00–21:00 · 週日到 17:30 · 週三休',v:true,desc:'米芝蓮一星燒鵝，鵝腿瀨粉。小店，排隊，翻桌快。',eat:'燒鵝腿瀨粉、燒鵝'},
+ {id:'c-taicheong',cl:'C',type:'food',name:'泰昌餅家',lat:22.2828,lng:114.1545,addr:'擺花街 35 號',hours:'約 07:30–21:00 · 待核實',v:false,desc:'牛油蛋撻，末代港督彭定康最愛。買了邊走邊吃。',eat:'蛋撻、沙翁'},
+ {id:'c-tsimchai',beef:'有牛肉麵選項，雲吞麵無牛',cl:'C',type:'food',name:'沾仔記',lat:22.2838,lng:114.1540,addr:'威靈頓街 98 號',hours:'約 09:00–22:00 · 待核實',v:false,desc:'米芝蓮推介雲吞麵，雲吞大顆。',eat:'雲吞麵、鯪魚球'},
+ {id:'c-taipingshan',cl:'C',type:'sight',name:'太平山街',lat:22.2855,lng:114.1490,addr:'上環太平山街',hours:'咖啡店約 10:00–18:00',v:false,desc:'上環小山坡，咖啡店、小廟、老水果攤全記鮮菓，外國人和本地文青都愛。坐下來喝咖啡的地方。',eat:''},
+ {id:'c-manmo',cl:'C',type:'sight',name:'文武廟',lat:22.2843,lng:114.1500,addr:'荷李活道 124–126 號',hours:'約 08:00–18:00 · 待核實',v:false,desc:'1847 年建，塔香垂吊，港劇裡拜神的場景。免費。',eat:''},
+ {id:'c-catst',cl:'C',type:'sight',name:'摩羅上街（古董街）',lat:22.2850,lng:114.1495,addr:'上環摩羅上街',hours:'約 11:00–18:00',v:false,desc:'古董和懷舊雜貨攤，老海報、舊錶、毛主席像章，拍照好看。',eat:''},
+ {id:'c-pmq',cl:'C',type:'sight',name:'PMQ 元創方',lat:22.2835,lng:114.1522,addr:'鴨巴甸街 35 號',hours:'約 07:00–23:00 · 店舖 11:00–20:00',v:false,desc:'舊警察宿舍改的設計小店集合體，有中庭有座位，可以躲太陽。',eat:''},
+ {id:'c-westernmkt',cl:'C',type:'sight',name:'西港城',lat:22.2870,lng:114.1500,addr:'德輔道中 323 號',hours:'約 10:00–19:00',v:false,desc:'1906 年的紅磚街市建築，裡面賣布。叮叮車西行的下車點。',eat:''},
+ {id:'c-driedseafood',cl:'C',type:'sight',name:'德輔道西海味街',lat:22.2870,lng:114.1440,addr:'德輔道西、永樂街一帶',hours:'店舖約 09:00–18:00',v:false,desc:'整條街曬海味鹹魚花膠，港味最重的一條街，長輩會很有感。',eat:''},
+ {id:'c-syp',cl:'C',type:'sight',name:'西營盤 藝里坊壁畫 · 街市',lat:22.2860,lng:114.1415,addr:'西營盤忠正街、奇靈里',hours:'全日',v:false,desc:'從西營盤站出來走壁畫巷到街市，市井加街頭藝術。比上環更本地。',eat:''},
+ // D 尖沙咀佐敦油麻地
+ {id:'d-pier',cl:'D',type:'sight',name:'尖沙咀天星碼頭 · 鐘樓',lat:22.2937,lng:114.1695,addr:'尖沙咀梳士巴利道',hours:'全日',v:false,desc:'從灣仔或中環過海的落腳點。鐘樓是舊九廣鐵路總站僅存的部分。',eat:''},
+ {id:'d-avenue',cl:'D',type:'sight',name:'星光大道 · 幻彩詠香江',lat:22.2935,lng:114.1740,addr:'尖沙咀海濱長廊',hours:'燈光秀每晚 20:00，約 10 分鐘，免費',v:true,desc:'看港島全景最經典的位置。日落 17:45 前到，一路看到天黑、燈亮、8 點的燈光秀。有長椅可以坐。',eat:''},
+ {id:'d-adc',cl:'D',type:'food',name:'澳洲牛奶公司',lat:22.3045,lng:114.1710,addr:'佐敦白加士街 47–49 號',hours:'07:30–22:00 · 週四休',v:true,desc:'佐敦排隊傳奇，出名快、出名兇。炒蛋多士和燉奶。6 個人會被拆成兩三桌，坐下 15 分鐘就要走。',eat:'炒蛋多士、蛋白燉鮮奶、杏汁燉蛋',note:'適合 2–3 人去體驗。長輩可能不喜歡那個節奏。'},
+ {id:'d-mak',cl:'D',type:'food',name:'麥文記麵家',lat:22.3048,lng:114.1710,addr:'佐敦白加士街 51 號',hours:'約 12:00–00:30 · 待核實',v:false,desc:'跟澳洲牛奶同一條街，雲吞麵老店，比較安靜，適合當第一天的晚餐。',eat:'雲吞麵、南乳豬手'},
+ {id:'d-temple',cl:'D',type:'sight',name:'廟街夜市',lat:22.3085,lng:114.1700,addr:'佐敦至油麻地廟街',hours:'約 18:00–23:00，20:00 後最旺',v:false,desc:'算命攤、粵曲、雜貨、大排檔。港劇裡的「廟街」就是這裡。',eat:'大排檔煲仔飯、炒蜆'},
+ {id:'d-mido',cl:'D',type:'food',name:'美都餐室',lat:22.3100,lng:114.1700,addr:'廟街 63 號',hours:'10:30–19:30 · 週三休',v:true,desc:'1950 年開，二樓卡座、彩色玻璃窗、老吊扇，無數港劇港片在這拍。坐得久，價錢公道。',eat:'焗排骨飯、紅豆冰、西多士',note:'下午茶時段去，坐窗邊看榕樹頭。'},
+ {id:'d-fruit',cl:'D',type:'sight',name:'油麻地果欄',lat:22.3125,lng:114.1690,addr:'油麻地窩打老道、石龍街',hours:'凌晨到早上批發最旺，傍晚後也熱鬧',v:false,desc:'1913 年的水果批發市場，老招牌、竹籮、手推車。晚上路過廟街可以走過去。',eat:'現切水果'},
+ {id:'d-tinhau',cl:'D',type:'sight',name:'油麻地天后廟 · 榕樹頭',lat:22.3105,lng:114.1700,addr:'廟街與眾坊街交界',hours:'廟約 08:00–17:00',v:false,desc:'廟街名字的來源。榕樹頭下有老人下棋，美都餐室就在對面。',eat:''},
+ // E 旺角太子
+ {id:'e-ladies',cl:'E',type:'sight',name:'女人街（看霓虹，路過就好）',lat:22.3175,lng:114.1705,addr:'通菜街（亞皆老街至登打士街）',hours:'約 12:00–23:00',v:false,desc:'不買東西，純看。晚上霓虹加人潮就是港片裡的旺角，走一段感受一下就夠。',eat:''},
+ {id:'e-goldfish',cl:'E',type:'sight',name:'金魚街',lat:22.3225,lng:114.1700,addr:'通菜街北段（旺角道以北）',hours:'約 10:30–22:00',v:false,desc:'整條街掛著一袋袋金魚，港片經典畫面。從花墟走過來順路。',eat:''},
+ {id:'e-flower',cl:'E',type:'sight',name:'花墟',lat:22.3255,lng:114.1710,addr:'太子花墟道',hours:'約 07:00–19:00，早上最好',v:false,desc:'幾十家花店，早上安靜、香、好拍。長輩會喜歡，慢慢走一小時。',eat:''},
+ {id:'e-bird',cl:'E',type:'sight',name:'園圃街雀鳥花園',lat:22.3260,lng:114.1730,addr:'太子園圃街',hours:'07:00–20:00',v:false,desc:'老伯帶著鳥籠來「遛鳥」，中式庭園設計。花墟隔壁。',eat:''},
+ {id:'e-kamwah',cl:'E',type:'food',name:'金華冰廳',lat:22.3220,lng:114.1685,addr:'太子弼街 47 號',hours:'約 06:30–23:00 · 待核實',v:false,desc:'香港最出名的菠蘿油之一，外皮脆、牛油厚。花墟走過來 8 分鐘，剛好下午茶。',eat:'菠蘿油、蛋撻、奶茶'},
+ {id:'e-hongcha',cl:'E',type:'food',name:'紅茶冰室（旺角）',lat:22.3190,lng:114.1690,addr:'旺角多間分店',hours:'約 07:00–22:00 · 待核實',v:false,desc:'小紅書洗版的連鎖茶餐廳，便宜、有冷氣、位子多。冰火菠蘿油是招牌。6 人好坐。',eat:'冰火菠蘿油、絲襪奶茶'},
+ {id:'e-feijie',cl:'E',type:'food',name:'肥姐小食店',lat:22.3150,lng:114.1700,addr:'登打士街 55 號',hours:'約 14:30–23:30 · 待核實',v:false,desc:'滷味串，站著吃，旺角街頭小食的代表。',eat:'生腸、墨魚、鴨腎'},
+ // F 深水埗
+ {id:'f-apliu',cl:'F',type:'sight',name:'鴨寮街跳蚤市場',lat:22.3305,lng:114.1640,addr:'深水埗鴨寮街',hours:'約 12:00–23:00',v:false,desc:'二手電子、舊物、雜貨，一條街的攤。港片裡的「鴨寮街」。',eat:''},
+ {id:'f-peiho',cl:'F',type:'sight',name:'北河街街市一帶',lat:22.3310,lng:114.1625,addr:'深水埗北河街',hours:'早上到傍晚',v:false,desc:'公和荳品廠、合益泰都在這幾條街，邊吃邊逛。',eat:''},
+ {id:'f-fabric',cl:'F',type:'sight',name:'基隆街 · 汝州街布料鈕扣街',lat:22.3320,lng:114.1630,addr:'深水埗基隆街、汝州街',hours:'約 10:00–19:00',v:false,desc:'整條街賣布、鈕扣、珠子，香港製衣業的餘韻。岳母可能想逛。',eat:''},
+ {id:'f-tainan',cl:'F',type:'sight',name:'大南街咖啡店',lat:22.3325,lng:114.1610,addr:'深水埗大南街',hours:'約 11:00–19:00',v:false,desc:'老區裡冒出來的文青咖啡街，皮革店、咖啡店、小書店。逛完街市來這坐一小時。',eat:'手沖咖啡'},
+ {id:'f-timhowan',cl:'F',type:'food',name:'添好運（深水埗本店）',lat:22.3300,lng:114.1635,addr:'福榮街 9–11 號',hours:'約 10:00–21:30 · 待核實',v:false,desc:'米芝蓮點心的本店，酥皮焗叉燒包是招牌。6 人有機會坐一桌。',eat:'酥皮焗叉燒包、蝦餃、蘿蔔糕'},
+ {id:'f-kungwo',cl:'F',type:'food',name:'公和荳品廠',lat:22.3315,lng:114.1625,addr:'北河街 118 號',hours:'07:00–21:00',v:true,desc:'百年豆品老店，木桌木凳。豆腐花、煎釀豆腐、豆漿。',eat:'豆腐花、煎釀豆腐、豆漿'},
+ {id:'f-hopyik',cl:'F',type:'food',name:'合益泰小食',lat:22.3300,lng:114.1625,addr:'桂林街 121 號',hours:'06:00–20:30',v:true,desc:'十幾塊港幣一碟腸粉，加甜醬麻醬。站著或坐小凳吃。深水埗早餐的起點。',eat:'腸粉、蘿蔔、魚蛋'},
+ {id:'f-lausum',cl:'F',type:'food',name:'劉森記麵家',lat:22.3305,lng:114.1615,addr:'福榮街 80 號',hours:'12:00–22:00',v:true,desc:'第三代竹昇麵，用竹竿壓出來的麵，蝦子撈麵是招牌。',eat:'蝦子撈麵、雲吞麵'},
+ {id:'f-kwankee',cl:'F',type:'food',name:'坤記糕品',lat:22.3295,lng:114.1625,addr:'福華街 115–117 號',hours:'約 07:30–19:00 · 待核實',v:false,desc:'街邊老店，缽仔糕、砵仔糕、白糖糕，幾塊錢一個。',eat:'缽仔糕、白糖糕'},
+ // G 九龍城
+ {id:'g-walled',cl:'G',type:'sight',name:'九龍寨城公園 · 電影場景展',lat:22.3320,lng:114.1905,addr:'東頭村道與東正道交界 · 宋皇臺站 B3 出口',hours:'公園 06:30–23:00 · 衙門展覽 09:00–19:00 · 免費 · 展到 2028',v:true,desc:'城寨拆掉後建的江南園林公園。衙門裡是《九龍城寨之圍城》電影場景展，1:1 重現 80 年代街頭攤檔、牙醫舖、魚蛋工場，還有城寨模型和舊照片。你們的情懷點，抓 2 小時。',eat:'',note:'2026-09 查證展覽仍在。'},
+ {id:'g-houwong',cl:'G',type:'sight',name:'侯王廟',lat:22.3330,lng:114.1880,addr:'聯合道 130 號',hours:'約 08:00–17:00',v:false,desc:'城寨公園旁邊的古廟，1730 年建，清靜，順路 15 分鐘。',eat:''},
+ {id:'g-thai',beef:'泰菜牛肉多，但豬、雞、海鮮一樣多，點菜時講「不要牛」',cl:'G',type:'food',name:'城南道「小泰國」',lat:22.3285,lng:114.1875,addr:'九龍城城南道、打鼓嶺道一帶',hours:'多間開到凌晨',v:false,desc:'香港最集中的泰國餐廳和雜貨街，泰國人經營。看完城寨走 10 分鐘來吃午餐，6 人好坐。',eat:'船麵、泰式炒河、烤豬頸肉'},
+ {id:'g-hoiwah',cl:'G',type:'food',name:'豪華餅店',lat:22.3290,lng:114.1880,addr:'衙前圍道 88 號',hours:'約 07:00–20:00 · 待核實',v:false,desc:'半世紀老餅店，九龍城人心中的蛋撻。買一盒帶上高鐵。',eat:'蛋撻、瑞士卷'},
+ {id:'g-lokhau',cl:'G',type:'food',name:'樂口福酒家',lat:22.3295,lng:114.1890,addr:'福佬村道 55 號',hours:'待核實',v:false,desc:'老式粵菜酒家，本地人飲茶擺酒的地方，價錢實在。泰國菜的備選。',eat:'點心、小菜'},
+ {id:'g-chilin',cl:'G',type:'sight',name:'志蓮淨苑 · 南蓮園池',lat:22.3400,lng:114.2035,addr:'鑽石山鳳德道 60 號 · 鑽石山站 C2',hours:'南蓮園池 07:00–21:00 · 志蓮淨苑約 09:00–16:30 · 免費 · 待核實',v:false,desc:'仿唐木構寺院和唐式園林，一根釘都沒用。非常安靜，有茶館，長輩可以坐一個下午。從宋皇臺兩站地鐵。',eat:'園內素齋、茶館'},
+ // 小紅書貼文補進來的
+ {id:'a-bakehouse',xhs:['http://xhslink.com/o/3ykfaG7Gyqw','https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],cl:'A',type:'food',name:'Bakehouse（灣仔店）',lat:22.2758,lng:114.1735,addr:'大王東街 14 號地舖',hours:'08:00–18:00',v:true,desc:'前四季酒店餅廚開的，小紅書封它「香港蛋撻天花板」。酸種蛋撻、牛角包。排隊 20–40 分鐘是常態。就在太原街街市旁邊，第一天下午順路。',eat:'酸種蛋撻、牛角包',note:'小紅書貼文原話：「感覺有點誇張，和內地裕蓮茶樓差不多」。值得排一次，不值得排兩次。'},
+ {id:'a-kamfai',xhs:['http://xhslink.com/o/3ykfaG7Gyqw'],cl:'A',type:'food',name:'金輝點心茶餐廳（機利臣街）',lat:22.2770,lng:114.1700,addr:'機利臣街 10 號',hours:'05:30–16:00',v:true,desc:'灣仔居民樓下的手工點心茶餐廳，本地人早茶，價錢比陸羽便宜一半以上。飯店走 10 分鐘。',eat:'蒸鳳爪、四寶滑雞扎、蒸排骨',note:'小紅書推薦。另一家春園街分店近日傳結業，去前用 OpenRice 確認這家還開。可當第三天陸羽的平價替代。'},
+ {id:'d-waso',xhs:['http://xhslink.com/o/3ykfaG7Gyqw'],cl:'D',type:'food',name:'華嫂冰室（尖沙咀）',lat:22.2985,lng:114.1730,addr:'加連威老道 10 號加威中心地下',hours:'08:00–22:00',v:true,desc:'小紅書和台灣客的網紅冰室，周杰倫、周潤發吃過。菠蘿油、豬扒包、番茄湯通粉。位子比澳洲牛奶多、態度好，6 人比較坐得下，但要排。',eat:'菠蘿油、豬扒包、番茄薯仔湯通粉',note:'小紅書貼文原話：「豬扒份量真的大，通心粉一般」。'},
+ {id:'d-cheekei',beef:'有牛筋腩麵，但招牌雲吞麵無牛，不吃牛沒問題',xhs:['http://xhslink.com/o/3ykfaG7Gyqw'],cl:'D',type:'food',name:'池記（尖沙咀）',lat:22.2975,lng:114.1715,addr:'樂道 52 號地舖',hours:'11:00–22:00',v:true,desc:'雲吞麵老店，米芝蓮推薦過，尖沙咀站旁。店面比麥文記大、乾淨，6 人好坐，價錢人均 HK$45–50。',eat:'雲吞麵、蟹黃粥、熱奶茶',note:'小紅書推薦。第一天晚餐可跟麥文記二選一。'},
+ {id:'d-tungtat',xhs:['http://xhslink.com/o/3ykfaG7Gyqw','https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],cl:'D',type:'food',name:'通達食店',lat:22.3125,lng:114.1710,addr:'油麻地碧街 48 號',hours:'07:00–21:00',v:true,desc:'油麻地 18 年老店，窗口賣咖喱魚蛋、燒賣、油渣麵。買了邊走邊吃，不用坐。',eat:'咖喱魚蛋、燒賣、油渣麵',note:'小紅書推薦。跟嘉多娜、和順記同一條碧街，三家 50 米內。'},
+ {id:'d-woshunkee',xhs:['http://xhslink.com/o/3ykfaG7Gyqw','https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],cl:'D',type:'food',name:'和順記（碧街）',lat:22.3123,lng:114.1715,addr:'油麻地碧街 24 號',hours:'週三至日 11:00–20:00 · 週一、二休',v:true,desc:'只有 4 張桌的小店，招牌是比拳頭大的現炸雞腿煎蛋飯，人均 HK$50–60。6 人坐不下，兩三個人去或外帶。',eat:'炸雞腿煎蛋飯',note:'小紅書推薦。你們在油麻地的星期日有開，星期一休。'},
+ {id:'d-kadorar',xhs:['http://xhslink.com/o/3ykfaG7Gyqw','https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],cl:'D',type:'food',name:'嘉多娜餅店',lat:22.3126,lng:114.1707,addr:'油麻地碧街 54 號',hours:'06:30–21:00 · 布甸包約 16:30 出爐',v:true,desc:'法式布甸包的始祖店，抹茶紅豆麻糬布甸包、黑白芝麻布甸包，每天出爐幾分鐘搶完。',eat:'法式布甸包、抹茶麻糬布甸包',note:'小紅書推薦。要吃就抓 16:30 出爐時間。'},
+ {id:'d-owls',xhs:['http://xhslink.com/o/3ykfaG7Gyqw','https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],cl:'D',type:'food',name:"Owl's Choux（尖沙咀）",lat:22.2975,lng:114.1745,addr:'麼地道 32 號地下',hours:'週二至日 15:00–21:00 · 週一休',v:true,desc:'連續多年米芝蓮推薦的泡芙店，焦糖燉蛋泡芙是招牌。常常不開門或早賣完，小紅書作者去了三次撲空。',eat:'焦糖燉蛋泡芙',note:'小紅書推薦。星期日下午經過尖沙咀時試手氣，不要特地去。'},
+ {id:'e-minghua',xhs:['http://xhslink.com/o/3ykfaG7Gyqw','https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],cl:'E',type:'food',name:'明華餅家',lat:22.3195,lng:114.1725,addr:'旺角煙廠街 1–3 號地下 D 舖',hours:'07:00–12:00',v:true,desc:'40 年老餅家，燒餅 HK$13 兩個，奶黃、花生、紅豆。只收現金港幣。中午就關。',eat:'燒餅（奶黃、紅豆）',note:'小紅書推薦。只開到中午，星期日你們下午才到旺角，除非改早上先去。'},
+ // 小紅書第三篇「反覆去吃的 16 家」補進來的
+ {id:'x-vission',cl:'C',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'Vission Bakery（中環）',lat:22.2822,lng:114.1520,addr:'士丹頓街 7 號地下低層',hours:'週一至三 07:30–21:00 · 週四至日 09:00–21:00',v:true,desc:'中環半山的小烘焙店，台灣客叫它「香港烘焙界的愛馬仕」。開心果蛋撻、抹茶麻糬丹麥酥，晚到就沒了。從 PMQ 走 3 分鐘。',eat:'開心果蛋撻、丹麥酥、牛角包',note:'小紅書第三篇推薦。跟 Bakehouse 二選一就好，都是排隊西式烘焙。'},
+ {id:'x-fatboy',cl:'D',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'肥仔記麵家（尖沙咀）',lat:22.2985,lng:114.1722,addr:'加拿分道 6B 號集友大廈地舖',hours:'11:00–22:00',v:true,desc:'港式粉麵店，手打魚蛋、墨魚丸、鮮蝦雲吞，價錢比池記便宜，本地人多。',eat:'鮮蝦雲吞麵、手打魚蛋、墨魚丸',beef:'有牛腩選項，其他都無牛',note:'小紅書第三篇推薦。尖沙咀晚餐第三個候選，跟池記、麥文記同類。'},
+ {id:'x-hesheeat',cl:'E',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'HeSheEat（旺角）',lat:22.3178,lng:114.1672,addr:'白布街 22 號藝興大廈地下 4 號舖',hours:'12:00–23:30',v:true,desc:'網紅西式 cafe，招牌是月見燒牛肉丼，也有意粉、梳乎厘班戟、牛角包配軟雪糕。跟港味無關，年輕人打卡店。',eat:'梳乎厘班戟、牛角包雪糕',beef:'招牌是牛肉丼，不吃牛的人只能點甜品和意粉',note:'小紅書第三篇推薦。優先度低，長輩不會喜歡。'},
+ {id:'x-danwong',cl:'E',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'旦王（旺角）',lat:22.3222,lng:114.1688,addr:'弼街 72 號地舖',hours:'10:00–01:00',v:true,desc:'旺角人龍小食店，HK$29 酸辣粉自選 23 款配料，麻辣陳皮魚蛋、豬紅。站著吃或外帶。金華冰廳就在同一條弼街。',eat:'酸辣粉、麻辣魚蛋、豬紅',note:'小紅書第三篇推薦。星期日下午在太子、旺角時順路。'},
+ {id:'x-asura',cl:'B',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'泰沾麵 Asura（希慎廣場）',lat:22.2795,lng:114.1838,addr:'銅鑼灣希慎廣場 B2 層 207 號舖',hours:'11:30–21:30',v:true,desc:'泰式船麵專門店，開在希慎廣場地下二層，有冷氣有位子，6 人好坐。星期日晚上看完希慎剛好在這吃。',eat:'泰式船麵（豚肉）、泰式炒河',beef:'船麵分牛、豬兩種湯底，點豬的就好',note:'小紅書第三篇推薦。星期日晚餐可取代登龍街。'},
+ {id:'x-chungso',cl:'A',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'聰。C Dessert（原聰嫂私房甜品，灣仔）',lat:22.2768,lng:114.1745,addr:'莊士敦道 35–45 號利文樓地下 1D 舖',hours:'週日至四 13:00–23:00 · 週五六 13:00–00:00',v:true,desc:'香港最出名的甜品店之一，劉德華的愛店，原班人馬 2023 年在灣仔重開。楊枝甘露、龍眼椰果冰、榴槤水晶珠。飯店走 8 分鐘，每晚回飯店前的收尾。',eat:'楊枝甘露、龍眼椰果冰、芒果雙皮奶',note:'小紅書那篇寫的「聰嫂私房 旺角」是山寨店，官方發過聲明說旺角絕無分店。真店在灣仔，剛好在你們飯店旁。'},
+ {id:'x-cookies',cl:'E',type:'food',xhs:['https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY='],name:'曲奇四重奏（旺角，伴手禮）',lat:22.3182,lng:114.1685,addr:'砵蘭街 240–244 號旺角文華商場地下 5 號舖（朗豪坊對面）',hours:'10:00–22:00',v:true,desc:'香港最紅的曲奇和蝴蝶酥伴手禮，一盒 HK$100 多。要帶東西回馬來西亞給人，這家是安全牌。',eat:'蝴蝶酥、牛油曲奇',note:'小紅書第三篇推薦。尖沙咀、銅鑼灣也有店。'},
+ // 商場與銅鑼灣
+ {id:'x-k11',cl:'D',type:'sight',name:'K11 MUSEA（商場，看一眼）',lat:22.2945,lng:114.1750,addr:'尖沙咀梳士巴利道 18 號，星光大道旁',hours:'約 10:00–22:00',v:false,desc:'香港這幾年最值得「看」的商場：中庭像博物館、屋頂花園面海。不買東西也值得走一圈。就在星光大道旁邊，第一天看燈光秀前後順路進去。',eat:''},
+ {id:'x-hysan',cl:'B',type:'sight',name:'希慎廣場 · 時代廣場（商場，看一眼）',lat:22.2795,lng:114.1838,addr:'銅鑼灣軒尼詩道 500 號 · 勿地臣街 1 號',hours:'約 10:00–22:00',v:false,desc:'銅鑼灣是香港密度最高的購物區。希慎廣場樓上有誠品書店，時代廣場是港劇裡倒數跨年那個。兩個走 5 分鐘，看一次就懂香港商場長什麼樣。',eat:''},
+ {id:'x-villain',cl:'B',type:'sight',name:'鵝頸橋打小人',lat:22.2785,lng:114.1800,addr:'銅鑼灣堅拿道天橋底',hours:'約 11:00–19:00',v:false,desc:'天橋底下幾位阿婆用鞋拍打紙人替人「打小人」，HK$50 一次。港劇港片的經典場景，本地人真的在用。銅鑼灣走到灣仔的路上一定經過。',eat:''},
+ {id:'x-leetung',cl:'A',type:'sight',name:'利東街（路過）',lat:22.2760,lng:114.1718,addr:'皇后大道東與莊士敦道之間',hours:'全日 · 晚上有燈飾',v:false,desc:'舊「喜帖街」翻新的步行街，偏商場感，晚上吊燈籠好拍。飯店回來的路上路過就好。',eat:''},
+ // H 太平山
+ {id:'h-tram',cl:'H',type:'transit',name:'山頂纜車總站（花園道）',lat:22.2775,lng:114.1590,addr:'中環花園道 33 號',hours:'07:00–24:00 · 平日來回 HK$88，週末 HK$108',v:true,desc:'地面軌道的纜索鐵路，坡度陡。太太不敢坐的話改搭 15 號巴士。',eat:''},
+ {id:'h-bus15',cl:'H',type:'transit',name:'15 號巴士（交易廣場開）',lat:22.2840,lng:114.1585,addr:'中環交易廣場巴士總站',hours:'約每 10–15 分一班 · 約 40 分鐘上山',v:false,desc:'雙層巴士上山，坐上層前排。怕纜車的人的替代方案，票價十幾塊港幣。',eat:''},
+ {id:'h-peak',cl:'H',type:'sight',name:'獅子亭 · 盧吉道',lat:22.2712,lng:114.1500,addr:'山頂',hours:'全日 · 凌霄閣 08:30–22:00',v:true,desc:'獅子亭免費看維港，不用買凌霄閣票。盧吉道是平路環山步道，45 分鐘一圈。',eat:''},
+ // transit misc
+ {id:'t-wkow',cl:'D',type:'transit',name:'西九龍高鐵站',lat:22.3045,lng:114.1660,addr:'柯士甸站／九龍站旁',hours:'第三天 18:54 G6550 → 廣州東 20:26',v:true,desc:'第三天出發點。提早 60–80 分鐘到，香港出境和中國入境在站內一次辦完。從灣仔計程車約 20 分鐘。',eat:''},
+ {id:'t-tstpier',cl:'D',type:'transit',name:'天星小輪 尖沙咀碼頭',lat:22.2932,lng:114.1685,addr:'尖沙咀',hours:'往灣仔尾班約 22:50 · 往中環尾班約 23:30',v:true,desc:'晚上回飯店的碼頭。8 分鐘到灣仔碼頭，飯店走 3 分鐘。',eat:''},
+];
+
+const IMGS = {"a-hotel": [{"src": "img/a-hotel-1.jpg", "generic": false, "credit": "Mk2010 · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Wan_Chai_Ferry_Pier_Roof_Garden_(Hong_Kong).jpg"}, {"src": "img/a-hotel-x1.jpg", "generic": true, "credit": "Xiadjo 200 SZTO · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_WCN_Wan_Chai_North_Harbour_Road_Hong_Kong_Arts_Centre_interior_June_2021_SS2.jpg"}, {"src": "img/a-hotel-c2.jpg", "generic": false, "credit": "Luiksimcyw · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Wan_Chai_North_%E6%B8%AF%E7%81%A3%E9%81%93_Harbour_Road_night_%E7%81%A3%E6%99%AF%E5%9C%8B%E9%9A%9B%E8%B3%93%E9%A4%A8_The_Harbourview_Hotel_name_sign_n_white_lightbox_YMCA_October_2017_IX1.jpg"}], "a-a11": [{"src": "img/a-a11-0.jpg", "generic": false, "credit": "Pa327 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Citybus%27s_Alexander_Dennis_E500_mmc_run_at_airport_route_A11.jpg"}, {"src": "img/a-a11-c4.jpg", "generic": false, "credit": "N509FZ · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:8101_at_HZMB_Hong_Kong_Port_(20181027154118).jpg"}], "a-pier": [{"src": "img/a-pier-0.jpg", "generic": false, "credit": "Linuwaojmkakloa · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E7%81%A3%E4%BB%94%E5%8C%97_Wan_Chai_North_%E9%87%91%E7%B4%AB%E8%8D%8A%E5%BB%A3%E5%A0%B4_Golden_Bauhinia_Square_%E5%8D%9A%E8%A6%BD%E9%81%93%E6%9D%B1_flagpoles_Mar-2014_photo_stall.JPG"}, {"src": "img/a-pier-1.jpg", "generic": false, "credit": "Baycrest · CC BY-SA 2.5", "url": "https://commons.wikimedia.org/wiki/File:Tsim_Sha_Tsui_Ferry_Pier.jpg"}, {"src": "img/a-pier-o2.jpg", "generic": false, "credit": "deardavidyan · CC BY · Flickr", "url": "https://www.flickr.com/photos/20990774@N08/50540879722"}, {"src": "img/a-pier-o4.jpg", "generic": false, "credit": "lhl · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/35034345551@N01/14170318028"}, {"src": "img/a-pier-o5.jpg", "generic": false, "credit": "wiredtourist.com · CC BY · Flickr", "url": "https://www.flickr.com/photos/54684856@N07/7061177401"}, {"src": "img/a-pier-c7.jpg", "generic": false, "credit": "No machine-readable author provided. Ilm · CC BY 2.5", "url": "https://commons.wikimedia.org/wiki/File:GoldenBauhiniaSquare.jpg"}], "a-market": [{"src": "img/a-market-0.jpg", "generic": false, "credit": "GAjuehn 300 PPYM · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_WC_%E7%81%A3%E4%BB%94_Wan_Chai_%E5%A4%AA%E5%8E%9F%E8%A1%97_Tai_Yuen_Street_market_September_2020_SS2_01_10.jpg"}, {"src": "img/a-market-1.jpg", "generic": false, "credit": "Wai Yin Hun Msicjd · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E7%81%A3%E4%BB%94%E8%A1%97%E5%B8%82_Wan_Chai_Market_street_stall_Dec-2017_IX1_Cross_Street_children_clothing.jpg"}, {"src": "img/a-market-o2.jpg", "generic": false, "credit": "all fong · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/65828967@N00/53803775"}, {"src": "img/a-market-o3.jpg", "generic": false, "credit": "Justin Gaurav Murgai · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/21651911@N00/3079214591"}, {"src": "img/a-market-o4.jpg", "generic": false, "credit": "Jim yes that is me · CC BY · Flickr", "url": "https://www.flickr.com/photos/48600077788@N01/5145153185"}, {"src": "img/a-market-o5.jpg", "generic": false, "credit": "Jim yes that is me · CC BY · Flickr", "url": "https://www.flickr.com/photos/48600077788@N01/5145752640"}], "a-blue": [{"src": "img/a-blue-0.jpg", "generic": false, "credit": "姒姓賢寧 · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Stone_Nullah_Lane_in_June_2025.jpg"}, {"src": "img/a-blue-o2.jpg", "generic": false, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/8500887109"}, {"src": "img/a-blue-c4.jpg", "generic": false, "credit": "Bluehse · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Wan_Chai_Stone_Nullah_Lane_Blue_House_SR.JPG"}], "a-starst": [{"src": "img/a-starst-0.jpg", "generic": false, "credit": "姒姓賢寧 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Star_Street,_Wan_Chai_part_2_in_February_2022.jpg"}], "a-joyhing": [{"src": "img/a-joyhing-0.jpg", "generic": false, "credit": "Ceeseven · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Joy_Hing_Roasted_Meat_Restaurant.JPG"}, {"src": "img/a-joyhing-1.jpg", "generic": true, "credit": "W Vkam POWAN BAy · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_YTM_YMT_%E5%8F%89%E7%87%92%E9%A3%AF_Char_Siu_Rice_box_June_2024_R12S_03.jpg"}, {"src": "img/a-joyhing-o2.jpg", "generic": true, "credit": "Premshree Pillai · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/18645779@N00/19645169716"}, {"src": "img/a-joyhing-o3.jpg", "generic": true, "credit": "Premshree Pillai · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/18645779@N00/19675856521"}, {"src": "img/a-joyhing-o5.jpg", "generic": true, "credit": "disney_den · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/15125378@N00/3524561715"}, {"src": "img/a-joyhing-c7.jpg", "generic": false, "credit": "Toiay laums Boarmsoa · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_WC_%E7%81%A3%E4%BB%94_Wan_Chai_%E8%BB%92%E5%B0%BC%E8%A9%A9%E9%81%93_Hennessy_Road_Steward_Road_Chong_Hing_Building_Joy_Hing%27s_Roasted_Meat_night_July_2020_SS2_02.jpg"}], "a-kamfung": [{"src": "img/a-kamfung-0.jpg", "generic": false, "credit": "YUEO YRUAIN LUKAM · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_WCD_Wan_Chai_Spring_Garden_Lane_shop_Kam_Fung_Cafe_April_2024_R12S.jpg"}, {"src": "img/a-kamfung-1.jpg", "generic": true, "credit": "Jp384 · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Cocktail_Bun_fancy.JPG"}, {"src": "img/a-kamfung-o2.jpg", "generic": false, "credit": "ekkun · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/31655482@N00/32548878487"}, {"src": "img/a-kamfung-o3.jpg", "generic": false, "credit": "ekkun · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/31655482@N00/46575547605"}], "a-kam": [{"src": "img/a-kam-0.jpg", "generic": true, "credit": "LN9267 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Wan_Chai_Kam%27s_Roast_Goose_24-08-2023.jpg"}, {"src": "img/a-kam-1.jpg", "generic": true, "credit": "Fanem WOO Huauimgy SAA · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_SKD_%E5%9D%91%E5%8F%A3_Hang_Hau_%E9%8A%80%E6%BE%B3%E8%B7%AF_Ngan_O_Road_%E9%A6%99%E6%B8%AF%E5%86%B0%E7%9A%AE%E7%87%92%E9%B5%9D%E5%B0%8F%E5%BB%9A_Hong_Kong_Crispy_Roast_Goose_Restaurant_September_2022_Px3_02.jpg"}, {"src": "img/a-kam-o2.jpg", "generic": true, "credit": "Michael McDonough · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/62963919@N00/157550411"}, {"src": "img/a-kam-o3.jpg", "generic": true, "credit": "bionicgrrrl · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/57815204@N00/4015283772"}], "a-honolulu": [{"src": "img/a-honolulu-0.jpg", "generic": false, "credit": "FWOSH katm 4502 · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_WCD_Wan_Chai_Hennessy_Road_night_November_2025_N13P_12.jpg"}, {"src": "img/a-honolulu-o1.jpg", "generic": true, "credit": "avlxyz · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/10559879@N00/2603392901"}, {"src": "img/a-honolulu-o2.jpg", "generic": true, "credit": "wonsun · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/10098759@N06/2958589488"}, {"src": "img/a-honolulu-c4.jpg", "generic": false, "credit": "PangSummei · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Wan_Chai_Hennessy_Road_Honolulu_Cafe.JPG"}], "a-bakehouse": [{"src": "img/xa03.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/xc12.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/a-bakehouse-r0.jpg", "generic": false, "credit": "Guoa Yinmsho Hooatd · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Central_%E4%B8%AD%E7%92%B0_SoHo_%E8%98%87%E8%B1%AA_Staunton_Street_%E5%A3%AB%E4%B8%B9%E9%A0%93%E8%A1%97_Bakehouse_Bakery_queue_March_2021_SS2_02.jpg"}, {"src": "img/a-bakehouse-r1.jpg", "generic": true, "credit": "姒姓賢寧 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Tai_Wong_Street_East,_Wan_Chai_part_2_in_February_2022.jpg"}], "a-kamfai": [{"src": "img/xa06.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/a-kamfai-1.jpg", "generic": true, "credit": "Madiuwoc ShammHaou · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_SKD_TKO_%E5%B0%87%E8%BB%8D%E6%BE%B3_Tseung_Kwan_O_PopCorn_mall_Pop_Deli_shop_%E7%A8%BB%E9%A6%99%E8%B6%85%E7%B4%9A%E6%BC%81%E6%B8%AF_Tao_Heung_Chinese_Restaurant_food_%E9%BB%9E%E5%BF%83_dim_sum_bamboo_steamer_tower_July_2024_R12S_02.jpg"}, {"src": "img/a-kamfai-o1.jpg", "generic": true, "credit": "mrlins · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/68467272@N00/5559759217"}, {"src": "img/a-kamfai-o2.jpg", "generic": true, "credit": "avlxyz · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/10559879@N00/3335172530"}], "b-taihang": [{"src": "img/b-taihang-1.jpg", "generic": true, "credit": "Zihfaboecfoak · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_WCD_%E5%A4%A7%E5%9D%91_Tai_Hang_%E8%93%AE%E8%8A%B1%E5%AE%AE%E5%85%AC%E5%9C%92_Lin_Fa_Kung_Garden_January_2021_SS2_04.jpg"}, {"src": "img/b-taihang-x1.jpg", "generic": true, "credit": "TheGarrulousMky · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Tai_Hang_Fire_Dragon_Dance_2024_01.jpg"}, {"src": "img/b-taihang-o3.jpg", "generic": false, "credit": "leowsw16 · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/102503343@N04/21109783354"}, {"src": "img/b-taihang-c4.jpg", "generic": false, "credit": "姒姓賢寧 · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Street_sign_at_Jones_Street,_Tai_Hang_in_June_2025.jpg"}], "b-bing": [{"src": "img/b-bing-1.jpg", "generic": true, "credit": "Andy Li · CC0", "url": "https://commons.wikimedia.org/wiki/File:Pork_Chop_Bun_and_Hong_Kong_style_Milk_Tea_(hot)_-_CK_Bistro_2025-09-16.jpg"}, {"src": "img/b-bing-r1.jpg", "generic": true, "credit": "Iskahgoirla · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E5%A4%A7%E5%9D%91_Tai_Hang_%E6%96%BD%E5%BC%BC%E8%A1%97_Shepherd_Street_name_sign_Apr-2014.JPG"}, {"src": "img/b-bing-o2.jpg", "generic": true, "credit": "TomEats · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/12998229@N00/6871454326"}, {"src": "img/b-bing-o3.jpg", "generic": true, "credit": "TomEats · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/12998229@N00/7017558507"}], "b-tanglung": [{"src": "img/b-tanglung-0.jpg", "generic": false, "credit": "SammyLu Yoomepooa · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_CWB_Causeway_Bay_Tang_Lung_Street_April_2021_19.jpg"}, {"src": "img/b-tanglung-o1.jpg", "generic": true, "credit": "aldask · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/96394350@N00/476033699"}, {"src": "img/b-tanglung-c4.jpg", "generic": false, "credit": "SammyLu Yoomepooa · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_CWB_Causeway_Bay_Tang_Lung_Street_April_2021_13.jpg"}], "c-tram": [{"src": "img/c-tram-0.jpg", "generic": false, "credit": "Hermann Luyken · CC0", "url": "https://commons.wikimedia.org/wiki/File:2015.05.17.124021_Tram_Hennessy_Road_Wan_Chai_Hong_Kong.jpg"}, {"src": "img/c-tram-o2.jpg", "generic": false, "credit": "transitpeople · CC BY · Flickr", "url": "https://www.flickr.com/photos/36217981@N02/16769896056"}, {"src": "img/c-tram-c4.jpg", "generic": false, "credit": "Hermann Luyken · CC0", "url": "https://commons.wikimedia.org/wiki/File:2015.05.17.123503_Tram_Hennessy_Road_Wan_Chai_Hong_Kong.jpg"}], "c-cmarket": [{"src": "img/c-cmarket-r0.jpg", "generic": false, "credit": "Unknown author · Public domain", "url": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Central_Market_1940s.jpg"}, {"src": "img/c-cmarket-x1.jpg", "generic": false, "credit": "LN9267 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Central_Market_staircase_09-05-2022(1).jpg"}, {"src": "img/c-cmarket-o2.jpg", "generic": false, "credit": "doctorho · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/62120997@N04/10140016436"}], "c-lanfong": [{"src": "img/c-lanfong-0.jpg", "generic": false, "credit": "Mockda Juankers · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B8%AD%E7%92%B0_Central_%E7%B5%90%E5%BF%97%E8%A1%97_Gage_Street_shop_Lan_Fong_Yuen_Cafe_Restaurant_March_2021_SS2.jpg"}, {"src": "img/c-lanfong-1.jpg", "generic": true, "credit": "唐787 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:%E8%98%AD%E8%8A%B3%E5%9C%92%E2%80%98%E7%B5%B2%E8%A5%AA%E5%A5%B6%E8%8C%B6%E2%80%99.jpg"}, {"src": "img/c-lanfong-o2.jpg", "generic": false, "credit": "Hombre Tangencial (JOP) · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/92158228@N00/16111443429"}, {"src": "img/c-lanfong-o3.jpg", "generic": false, "credit": "Isen Majennt · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/63455568@N08/8204727013"}, {"src": "img/c-lanfong-o4.jpg", "generic": true, "credit": "Dennis Wong · CC BY · Flickr", "url": "https://www.flickr.com/photos/97247234@N00/5296600729"}, {"src": "img/c-lanfong-o5.jpg", "generic": true, "credit": "NukelarBurrito · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/29305806@N06/3877268038"}, {"src": "img/c-lanfong-c7.jpg", "generic": false, "credit": "Safoule 2558 LausldM · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B8%AD%E7%92%B0_Central_%E6%93%BA%E8%8A%B1%E8%A1%97_Lyndhurst_Terrace_%E7%B5%90%E5%BF%97%E8%A1%97_Gage_Street_shop_%E8%98%AD%E8%8A%B3%E5%9C%92_Lan_Fong_Yuen_February_2025_R12S_04.jpg"}], "c-lukyu": [{"src": "img/c-lukyu-0.jpg", "generic": false, "credit": "Homm BoUretak BAORP · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B8%AD%E7%92%B0_Central_%E5%A3%AB%E4%B8%B9%E5%88%A9%E8%A1%97_Stanley_Street_shop_Luk_Yu_Tea_House_March_2026_N13P_01.jpg"}, {"src": "img/c-lukyu-1.jpg", "generic": false, "credit": "Wpcpey · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Luk_Yu_Tea_House_Dim_sum_sheet_2017.jpg"}, {"src": "img/c-lukyu-o2.jpg", "generic": false, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/6329115240"}, {"src": "img/c-lukyu-o3.jpg", "generic": false, "credit": "tallkev · CC BY · Flickr", "url": "https://www.flickr.com/photos/93993914@N00/249136246"}, {"src": "img/c-lukyu-o4.jpg", "generic": true, "credit": "Roystan · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/47841492@N00/3142797076"}, {"src": "img/c-lukyu-c6.jpg", "generic": false, "credit": "Homm BoUretak BAORP · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B8%AD%E7%92%B0_Central_%E5%A3%AB%E4%B8%B9%E5%88%A9%E8%A1%97_Stanley_Street_shop_Luk_Yu_Tea_House_March_2026_N13P_08.jpg"}], "c-linheung": [{"src": "img/c-linheung-1.jpg", "generic": false, "credit": "Xuthoria · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Hong_Kong_2026_-_Lin_Heung_Lau_02.jpg"}, {"src": "img/c-linheung-o1.jpg", "generic": false, "credit": "Herman Saksono · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/30777786@N00/5260046086"}, {"src": "img/c-linheung-o2.jpg", "generic": false, "credit": "revoldaw · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/61784959@N00/7582644404"}, {"src": "img/c-linheung-o3.jpg", "generic": false, "credit": "ininLOVEbB · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/31389030@N07/5738630721"}, {"src": "img/c-linheung-o4.jpg", "generic": false, "credit": "Inklaar · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/35468149066@N01/16122644775"}], "c-yatlok": [{"src": "img/c-yatlok-0.jpg", "generic": false, "credit": "Eakzowuweb · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Central_34-38_Stanley_Street_%E4%B8%80%E6%A8%82%E7%87%92%E9%B5%9D_Yat_Lok_Barbeque_Restaurant_May-2013.JPG"}, {"src": "img/c-yatlok-o1.jpg", "generic": true, "credit": "City Foodsters · CC BY · Flickr", "url": "https://www.flickr.com/photos/89060048@N03/16698780152"}, {"src": "img/c-yatlok-o2.jpg", "generic": true, "credit": "City Foodsters · CC BY · Flickr", "url": "https://www.flickr.com/photos/89060048@N03/16079878863"}], "c-taicheong": [{"src": "img/c-taicheong-0.jpg", "generic": false, "credit": "KahamCafee · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Central_Lyndhurst_Terrace_Tai_Cheong_Bakery.JPG"}, {"src": "img/c-taicheong-o1.jpg", "generic": true, "credit": "enuwy · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/74505947@N00/11621672"}, {"src": "img/c-taicheong-o2.jpg", "generic": true, "credit": "City Foodsters · CC BY · Flickr", "url": "https://www.flickr.com/photos/89060048@N03/16079911633"}, {"src": "img/c-taicheong-o3.jpg", "generic": false, "credit": "TSalon · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/49503058070@N01/62303086"}, {"src": "img/c-taicheong-o4.jpg", "generic": false, "credit": "aWee · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/31751386@N00/146080227"}, {"src": "img/c-taicheong-c6.jpg", "generic": false, "credit": "Lily Lam Gowangiu · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Central_%E6%93%BA%E8%8A%B1%E8%A1%97_Lyndhurst_Terrace_shop_sign_Tai_Cheong_Bakery_April_2019_IX2.jpg"}], "c-tsimchai": [{"src": "img/c-tsimchai-0.jpg", "generic": false, "credit": "Weizshaum KIAMZOU 300 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B8%AD%E7%92%B0_Central_%E5%A8%81%E9%9D%88%E9%A0%93%E8%A1%97_98_Wellington_Street_Jade_Centre_shop_Cochrane_Street_October_2021_SS2_04.jpg"}, {"src": "img/c-tsimchai-1.jpg", "generic": true, "credit": "HruhaMinz YUEA · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E5%8C%97%E8%A7%92_North_Point_%E6%B8%A3%E8%8F%AF%E9%81%93_108_Java_Road_shop_%E6%AC%8A%E8%A8%98%E9%9B%B2%E5%90%9E%E9%BA%B5_Kuen_Kee_Noodle_Restaurant_%E9%9B%B2%E5%90%9E%E9%BA%B5_wonton_noodle_May_2022_Px3_02.jpg"}, {"src": "img/c-tsimchai-o2.jpg", "generic": true, "credit": "Richard Allaway · CC BY · Flickr", "url": "https://www.flickr.com/photos/16287002@N00/13466307265"}, {"src": "img/c-tsimchai-o3.jpg", "generic": true, "credit": "Richard Allaway · CC BY · Flickr", "url": "https://www.flickr.com/photos/16287002@N00/13090275245"}, {"src": "img/c-tsimchai-o5.jpg", "generic": true, "credit": "avlxyz · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/10559879@N00/2229944805"}], "c-manmo": [{"src": "img/c-manmo-0.jpg", "generic": false, "credit": "Aethelfirth · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Burning_incense_coils_in_the_Man_Mo_temple_(Hong_Kong).jpg"}, {"src": "img/c-manmo-o1.jpg", "generic": false, "credit": "sbmeaper1 · CC CC0 · Flickr", "url": "https://www.flickr.com/photos/142289055@N04/31741983081"}, {"src": "img/c-manmo-o2.jpg", "generic": false, "credit": "xopherlance · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/91673635@N00/3992501092"}, {"src": "img/c-manmo-c4.jpg", "generic": false, "credit": "Andrew Moore from Johannesburg, South Af · CC BY-SA 2.0", "url": "https://commons.wikimedia.org/wiki/File:Man_Mo_Temple_Hollywood_Road_Interior_201704.jpg"}], "c-catst": [{"src": "img/c-catst-r1.jpg", "generic": false, "credit": "Jmschws · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Upper_Lascar_Row.JPG"}, {"src": "img/c-catst-o1.jpg", "generic": false, "credit": "alcuin lai · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/28658116@N02/8375613336"}, {"src": "img/c-catst-o2.jpg", "generic": false, "credit": "leadenhall · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/7933400@N02/2712964102"}, {"src": "img/c-catst-c3.jpg", "generic": false, "credit": "Tungpengmaliu · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Sheung_Wan_%E4%B8%8A%E7%92%B0_%E6%91%A9%E7%BE%85%E4%B8%8A%E8%A1%97_17_Lower_Lascar_Row_shop_sign_Ho%27s_Brother_Antique_June-2012.JPG"}], "c-pmq": [{"src": "img/c-pmq-0.jpg", "generic": false, "credit": "Lizatanmenhua · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Sheung_Wan_PMQ_Aberdeen_Street_courtyard_night_Dec-2015_DSC.JPG"}, {"src": "img/c-pmq-o2.jpg", "generic": false, "credit": "Ynote · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/60704156@N04/24265653586"}], "c-westernmkt": [{"src": "img/c-westernmkt-0.jpg", "generic": false, "credit": "Slaijhhare RRommier · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B8%8A%E7%92%B0_Sheung_Wan_night_%E5%B9%B2%E8%AB%BE%E9%81%93%E8%A5%BF_Connaught_Road_West_Western_Market_brick_building_June_2020_SS2.jpg"}, {"src": "img/c-westernmkt-c4.jpg", "generic": false, "credit": "Maodcxk Tao WHEUO · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_SW_%E4%B8%8A%E7%92%B0_Sheung_Wan_Morrison_Street_Des_Voeux_Road_Central_Western_Market_Yardley_Commercial_Building_April_2021_SS2.jpg"}], "c-driedseafood": [{"src": "img/c-driedseafood-0.jpg", "generic": false, "credit": "Vinnyauria · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Sai_Ying_Pun_Des_Voeux_Road_West_152_%E5%90%88%E5%88%A9%E5%92%B8%E9%AD%9A_Dried_seafood_shop.JPG"}, {"src": "img/c-driedseafood-c4.jpg", "generic": false, "credit": "Leesia · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Sai_Ying_Pun_Des_Voeux_Road_West_Dried_Seafood_EPS_n_Visa_POS.JPG"}], "c-syp": [{"src": "img/c-syp-0.jpg", "generic": false, "credit": "DskoShieng KuaomeN · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_SYP_Sai_Ying_Pun_MTR_Station_B_exit_and_entrance_wall_sculpture_art_July_2025_N13P_02.jpg"}, {"src": "img/c-syp-1.jpg", "generic": false, "credit": "WickerterEXPERTZ MMYPOOA · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_SYP_%E8%A5%BF%E7%92%B0_Sai_Ying_Pun_%E6%AD%A3%E8%A1%97%E8%A1%97%E5%B8%82_Centre_Street_Market_footbridge_to_%E8%A5%BF%E7%87%9F%E7%9B%A4%E8%A1%97%E5%B8%82_Sai_Ying_Pun_Market_October_2025_R12S.jpg"}, {"src": "img/c-syp-o3.jpg", "generic": false, "credit": "Os Ishmael · CC BY · Flickr", "url": "https://www.flickr.com/photos/51425610@N05/15563353614"}, {"src": "img/c-syp-c4.jpg", "generic": false, "credit": "LSOBosyUE Augo TongKIN · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_SYP_%E8%A5%BF%E7%87%9F%E7%9B%A4%E7%AB%99_Sai_Ying_Pun_MTR_Station_B_exit_and_entrance_wall_sculpture_art_August_2025_N13P_06.jpg"}], "d-pier": [{"src": "img/d-pier-0.jpg", "generic": false, "credit": "Alan · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Tsim_Sha_Tsui_Star_Ferry_Pier.jpg"}, {"src": "img/d-pier-o1.jpg", "generic": false, "credit": "Photos By Dlee · CC BY-ND · Flickr", "url": "https://www.flickr.com/photos/71081860@N08/8400566518"}, {"src": "img/d-pier-o2.jpg", "generic": false, "credit": "khengsiong · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/75931719@N00/6645863767"}, {"src": "img/d-pier-o3.jpg", "generic": false, "credit": "johnlsl · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/22115899@N06/50144576941"}, {"src": "img/d-pier-o4.jpg", "generic": false, "credit": "Bernard Spragg · CC CC0 · Flickr", "url": "https://www.flickr.com/photos/88123769@N02/8112199340"}, {"src": "img/d-pier-c6.jpg", "generic": false, "credit": "BrokenSphere · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Tsim_Sha_Tsui_Star_Ferry_terminal_section.JPG"}], "d-avenue": [{"src": "img/d-avenue-0.jpg", "generic": false, "credit": "No machine-readable author provided. Eno · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Tsim_Sha_Tsui_Avenue_of_Stars.jpg"}, {"src": "img/d-avenue-1.jpg", "generic": false, "credit": "Daniel Case · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Central_skyline_by_night_from_Tsim_Sha_Tsui.jpg"}, {"src": "img/d-avenue-o2.jpg", "generic": true, "credit": "EmmaJG · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/56573178@N00/3199018426"}, {"src": "img/d-avenue-o3.jpg", "generic": true, "credit": "Studio Incendo · CC BY · Flickr", "url": "https://www.flickr.com/photos/29418416@N08/14434826117"}, {"src": "img/d-avenue-o4.jpg", "generic": true, "credit": "Sprengben · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/37010090@N04/4034724740"}, {"src": "img/d-avenue-o5.jpg", "generic": true, "credit": "mksystem · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/47726742@N04/8661730113"}, {"src": "img/d-avenue-c7.jpg", "generic": false, "credit": "Sprabhavalkar.2011 · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Skyline,_as_seen_from_the_Avenue_of_Stars,_Tsim_Sha_Tsui,_Hong_Kong.JPG"}], "d-adc": [{"src": "img/d-adc-0.jpg", "generic": false, "credit": "圍棋一級 · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Australia_Dairy_Company_outlook.JPG"}, {"src": "img/d-adc-1.jpg", "generic": false, "credit": "Chainwit. · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Australia_Dairy_Company_-_%E6%BE%B3%E6%B4%B2%E7%89%9B%E5%A5%B6%E5%85%AC%E5%8F%B8_(JUN_2026)_-_img_07.jpg"}, {"src": "img/d-adc-o2.jpg", "generic": false, "credit": "Xin Li 88 · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/70109407@N00/4781802206"}, {"src": "img/d-adc-o3.jpg", "generic": false, "credit": "Xin Li 88 · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/70109407@N00/4781802308"}, {"src": "img/d-adc-c5.jpg", "generic": false, "credit": "City Foodsters · CC BY 2.0", "url": "https://commons.wikimedia.org/wiki/File:Australia_Dairy_Company_-_Ham_and_Egg_Sandwich.jpg"}], "d-mak": [{"src": "img/d-mak-0.jpg", "generic": false, "credit": "Kiwi He · CC BY-SA 2.0", "url": "https://commons.wikimedia.org/wiki/File:%E6%BE%B3%E6%B4%B2%E7%89%9B%E5%A5%B6%E5%85%AC%E5%8F%B8_%E9%BA%A5%E6%96%87%E8%A8%98%E9%BA%B5%E5%AE%B6_%E9%9C%93%E8%99%B9%E6%8B%9B%E7%89%8C,_2011.jpg"}, {"src": "img/d-mak-1.jpg", "generic": true, "credit": "HruhaMinz YUEA · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E5%8C%97%E8%A7%92_North_Point_%E6%B8%A3%E8%8F%AF%E9%81%93_108_Java_Road_shop_%E6%AC%8A%E8%A8%98%E9%9B%B2%E5%90%9E%E9%BA%B5_Kuen_Kee_Noodle_Restaurant_%E9%9B%B2%E5%90%9E%E9%BA%B5_wonton_noodle_May_2022_Px3_01.jpg"}, {"src": "img/d-mak-o2.jpg", "generic": false, "credit": "erinchan2 · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/144488705@N05/27817358766"}, {"src": "img/d-mak-o3.jpg", "generic": false, "credit": "kaige · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/68686790@N00/13597778905"}], "d-temple": [{"src": "img/d-temple-0.jpg", "generic": false, "credit": "Chayquo Shumo · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%BD%90%E6%95%A6_Jordan_%E5%BB%9F%E8%A1%97_Temple_Street_%E5%AF%A7%E6%B3%A2%E8%A1%97_Ning_Po_Street_%E5%A4%9C%E5%B8%82_night_market_stalls_May_2024_R12S_02.jpg"}, {"src": "img/d-temple-o1.jpg", "generic": false, "credit": "np&djjewell · CC BY · Flickr", "url": "https://www.flickr.com/photos/10110263@N03/5294247521"}, {"src": "img/d-temple-o2.jpg", "generic": false, "credit": "ETNevins · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/43976590@N00/13926612682"}, {"src": "img/d-temple-o3.jpg", "generic": true, "credit": "kllauphotograph.com · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/96070045@N04/14943027415"}, {"src": "img/d-temple-o4.jpg", "generic": true, "credit": "Bernard Spragg · CC CC0 · Flickr", "url": "https://www.flickr.com/photos/88123769@N02/40434642195"}, {"src": "img/d-temple-c6.jpg", "generic": false, "credit": "Chayquo Shumo · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%BD%90%E6%95%A6_Jordan_%E5%BB%9F%E8%A1%97_Temple_Street_%E5%AF%A7%E6%B3%A2%E8%A1%97_Ning_Po_Street_%E5%A4%9C%E5%B8%82_night_market_stalls_May_2024_R12S_10.jpg"}], "d-mido": [{"src": "img/d-mido-0.jpg", "generic": false, "credit": "DUOU HUA Shiuma 2028 · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_YTM_Yau_Ma_Tei_Public_Square_Street_Temple_Street_near_Mido_Cafe_June_2024_R12S_01.jpg"}, {"src": "img/d-mido-r1.jpg", "generic": false, "credit": "Wpcpey · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Mido_Cafe_202011.jpg"}, {"src": "img/d-mido-o2.jpg", "generic": false, "credit": "Jonathan van Smit · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/37482335@N00/2617614559"}, {"src": "img/d-mido-o3.jpg", "generic": false, "credit": "an-dree-uh · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/43483010@N00/13218267674"}, {"src": "img/d-mido-c5.jpg", "generic": false, "credit": "DUOU HUA Shiuma 2028 · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_YTM_Yau_Ma_Tei_Public_Square_Street_Temple_Street_near_Mido_Cafe_June_2024_R12S_08.jpg"}], "d-fruit": [{"src": "img/d-fruit-0.jpg", "generic": false, "credit": "Wpcpey · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Yau_Ma_Tei_Wholesale_Fruit_Market_view1_202005.jpg"}, {"src": "img/d-fruit-o1.jpg", "generic": false, "credit": "mrdavidlaw · CC BY · Flickr", "url": "https://www.flickr.com/photos/78987209@N04/18053540850"}, {"src": "img/d-fruit-o2.jpg", "generic": false, "credit": "SunWai · CC BY-ND · Flickr", "url": "https://www.flickr.com/photos/12406963@N04/3372578649"}], "d-tinhau": [{"src": "img/d-tinhau-0.jpg", "generic": false, "credit": "Komingmeuawartm · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Yau_Ma_Tei_Public_Square_Tin_Hau_Temple_interior_Dec-2013.JPG"}, {"src": "img/d-tinhau-o1.jpg", "generic": false, "credit": "InSapphoWeTrust · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/56619626@N05/5282296030"}, {"src": "img/d-tinhau-o2.jpg", "generic": false, "credit": "InSapphoWeTrust · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/56619626@N05/5281694133"}], "d-waso": [{"src": "img/xa05.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/d-waso-1.jpg", "generic": true, "credit": "Andy Li · CC0", "url": "https://commons.wikimedia.org/wiki/File:%E6%A3%8B%E5%93%A5%E8%8F%A0%E8%98%BF%E6%B2%B9.jpg"}, {"src": "img/d-waso-r1.jpg", "generic": false, "credit": "Mareij OWMLEE · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_TST_%E5%B0%96%E6%B2%99%E5%92%80_Tsim_Sha_Tsui_%E5%8A%A0%E9%80%A3%E5%A8%81%E8%80%81%E9%81%93_Granville_Road_shop_Waso_Cafe_Restaurant_July_2025_R12S_01.jpg"}, {"src": "img/d-waso-o2.jpg", "generic": true, "credit": "Dennis Wong · CC BY · Flickr", "url": "https://www.flickr.com/photos/97247234@N00/3476645160"}, {"src": "img/d-waso-o3.jpg", "generic": true, "credit": "Dennis Wong · CC BY · Flickr", "url": "https://www.flickr.com/photos/97247234@N00/3476646912"}], "d-cheekei": [{"src": "img/xa07.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/d-cheekei-1.jpg", "generic": true, "credit": "NeoBatfreak · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Wonton_Noodle_Soup_in_Fresno,_California_(%E9%9B%B2%E5%90%9E%E6%B9%AF%E9%BA%B5%E5%9C%A8%E5%8A%A0%E5%88%A9%E7%A6%8F%E5%B0%BC%E4%BA%9E%E5%B7%9E%E7%9A%84%E5%BC%97%E9%9B%B7%E6%96%AF%E8%AB%BE).jpg"}, {"src": "img/d-cheekei-r1.jpg", "generic": true, "credit": "Angeimoarm · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Sai_Ying_Pun_Centre_Street_%E9%9B%B2%E5%90%9E_Wonton_noodle_July-2012.JPG"}, {"src": "img/d-cheekei-o2.jpg", "generic": true, "credit": "Shoot First, Eat Later · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/93045861@N00/16060726221"}, {"src": "img/d-cheekei-o3.jpg", "generic": false, "credit": "Isen Majennt · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/63455568@N08/8205815142"}, {"src": "img/d-cheekei-o4.jpg", "generic": false, "credit": "Isen Majennt · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/63455568@N08/8204724805"}], "d-tungtat": [{"src": "img/xa01.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/xc07.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/d-tungtat-0.jpg", "generic": true, "credit": "Silvermetals · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Curry_Fishball.JPG"}, {"src": "img/d-tungtat-o2.jpg", "generic": true, "credit": "wZa HK · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/27647984@N00/2281311095"}, {"src": "img/d-tungtat-o3.jpg", "generic": true, "credit": "billibala · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/57661481@N00/13065066785"}], "d-woshunkee": [{"src": "img/xa02.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/xc09.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/d-woshunkee-1.jpg", "generic": true, "credit": "Andy Li · CC0", "url": "https://commons.wikimedia.org/wiki/File:%E7%82%B8%E9%9B%9E%E9%AB%80%E9%85%8D%E6%B2%99%E5%BE%8B.jpg"}], "d-owls": [{"src": "img/xa11.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/xc00.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/d-owls-1.jpg", "generic": true, "credit": "Stu Spivack · CC BY 2.0", "url": "https://commons.wikimedia.org/wiki/File:Cream_puff_(cropped_and_edited).jpg"}], "t-wkow": [{"src": "img/t-wkow-r1.jpg", "generic": false, "credit": "Nissangeniss · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_West_kowloon_Station_Waiting_area.jpg"}], "t-tstpier": [{"src": "img/t-tstpier-0.jpg", "generic": false, "credit": "Bahnfrend · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Tsim_Sha_Tsui_Ferry_Pier,_2006_(01).jpg"}, {"src": "img/t-tstpier-o1.jpg", "generic": false, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/6819358436"}, {"src": "img/t-tstpier-o2.jpg", "generic": false, "credit": "wZa HK · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/27647984@N00/531101798"}], "e-ladies": [{"src": "img/e-ladies-0.jpg", "generic": false, "credit": "Ekratoem · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Mong_Kok_night_Soy_Street_Tung_Choi_Street_Oct-2012.JPG"}, {"src": "img/e-ladies-o1.jpg", "generic": false, "credit": "Chika · CC BY · Flickr", "url": "https://www.flickr.com/photos/26694022@N00/4099899714"}, {"src": "img/e-ladies-o2.jpg", "generic": false, "credit": "philcalvert · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/44253065@N00/16497197542"}, {"src": "img/e-ladies-o3.jpg", "generic": true, "credit": "Ding Yuin Shan · CC BY · Flickr", "url": "https://www.flickr.com/photos/90461913@N00/6499624609"}], "e-goldfish": [{"src": "img/e-goldfish-0.jpg", "generic": false, "credit": "Kamscharmog · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Mong_Kok_aquarium_shop_Tung_Choi_Street_plastic_bag_golden_fish_Sept-2012.JPG"}, {"src": "img/e-goldfish-o1.jpg", "generic": false, "credit": "slazebni · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/95759040@N00/8998853026"}, {"src": "img/e-goldfish-o2.jpg", "generic": false, "credit": "Verity Cridland · CC BY · Flickr", "url": "https://www.flickr.com/photos/58789412@N00/42789414252"}, {"src": "img/e-goldfish-c4.jpg", "generic": false, "credit": "Kamscharmog · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Mong_Kok_Botang_Bay_Aquarium_shop_sign_yellow_Tung_Choi_Street_Golden_fish_plastic_bag_Sept-2012.JPG"}], "e-flower": [{"src": "img/e-flower-0.jpg", "generic": false, "credit": "MyPlace2015 mm · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_MongKok_Flower_Market_Road_shop_red_roses_April_2015_RedMi.jpg"}, {"src": "img/e-flower-x1.jpg", "generic": false, "credit": "MyPlace2015 mm · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_MongKok_Flower_Market_Road_shop_%E5%9C%92%E8%97%9D%E8%A1%97_Yuen_Ngai_Street_name_sign_Apr_2015_RedMi.jpg"}], "e-bird": [{"src": "img/e-bird-x0.jpg", "generic": false, "credit": "Yuenposum · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Mongkok_Yuen_Po_Street_Bird_Garden_Market_1.jpg"}, {"src": "img/e-bird-o1.jpg", "generic": false, "credit": "Terry Hassan · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/15427108@N05/39998397300"}, {"src": "img/e-bird-o2.jpg", "generic": false, "credit": "avlxyz · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/10559879@N00/2228541742"}, {"src": "img/e-bird-c4.jpg", "generic": false, "credit": "Wing1990hk · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Yuen_Po_Street_Bird_Garden_Entrance_2012.jpg"}], "e-kamwah": [{"src": "img/e-kamwah-1.jpg", "generic": true, "credit": "Dennis Wong from Hong Kong, Hong Kong · CC BY 2.0", "url": "https://commons.wikimedia.org/wiki/File:%E8%8F%A0%E8%98%BF%E6%B2%B9_(Pineapple_Bun)_(3476646912).jpg"}, {"src": "img/e-kamwah-r1.jpg", "generic": false, "credit": "cliffchen1973 from Kaohsiung, Taiwan · CC BY 2.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E9%87%91%E8%8F%AF%E5%86%B0%E5%BB%B3_(4709179646).jpg"}, {"src": "img/e-kamwah-o2.jpg", "generic": true, "credit": "inju · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/35468141938@N01/18326293931"}, {"src": "img/e-kamwah-o3.jpg", "generic": false, "credit": "Roller Coaster Philosophy · CC BY · Flickr", "url": "https://www.flickr.com/photos/32916425@N04/53432057672"}, {"src": "img/e-kamwah-o4.jpg", "generic": false, "credit": "Roller Coaster Philosophy · CC BY · Flickr", "url": "https://www.flickr.com/photos/32916425@N04/53433304134"}], "e-hongcha": [{"src": "img/e-hongcha-r1.jpg", "generic": true, "credit": "Peachyeung316 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:A_Pineapple_bun_in_bun_mei_Hong_Kong_style_restaurant.jpg"}, {"src": "img/e-hongcha-o1.jpg", "generic": true, "credit": "xopherlance · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/91673635@N00/4275922646"}, {"src": "img/e-hongcha-o2.jpg", "generic": true, "credit": "hc_hillary · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/66340895@N06/11008848496"}, {"src": "img/e-hongcha-o3.jpg", "generic": true, "credit": "gorekun · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/14340225@N03/16248811590"}, {"src": "img/e-hongcha-o4.jpg", "generic": true, "credit": "gorekun · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/14340225@N03/16435283102"}], "e-minghua": [{"src": "img/xa09.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/xc06.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/e-minghua-0.jpg", "generic": false, "credit": "Halkam Luia · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_MK_%E6%97%BA%E8%A7%92_Mong_Kok_%E8%8A%B1%E5%9C%92%E8%A1%97_Fa_Yuen_Street_shop_%E6%98%8E%E8%8F%AF%E9%A4%85%E5%AE%B6_Ming_Wah_Cake_Shop_bakery_May_2022_Px3_02.jpg"}, {"src": "img/e-minghua-1.jpg", "generic": true, "credit": "LNAM Haoi · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_SSP_%E9%95%B7%E6%B2%99%E7%81%A3_Cheung_Sha_Wan_%E6%B7%B1%E7%9B%9B%E8%B7%AF_Sham_Shing_Road_%E6%B3%93%E6%99%AF%E6%BB%99%E5%95%86%E5%A0%B4_Banyan_Mall_shop_%E8%9B%8B%E6%92%BB%E7%8E%8B_King_Bakery_Studio_December_2019_SS2_tarts.jpg"}, {"src": "img/e-minghua-o4.jpg", "generic": true, "credit": "John Havery Samuel · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/9872196@N08/14073061592"}, {"src": "img/e-minghua-o5.jpg", "generic": true, "credit": "babe_kl · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/14183017@N00/307739633"}, {"src": "img/e-minghua-c7.jpg", "generic": false, "credit": "Halkam Luia · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_MK_%E6%97%BA%E8%A7%92_Mong_Kok_%E8%8A%B1%E5%9C%92%E8%A1%97_Fa_Yuen_Street_shop_%E6%98%8E%E8%8F%AF%E9%A4%85%E5%AE%B6_Ming_Wah_Cake_Shop_bakery_May_2022_Px3_04.jpg"}], "f-apliu": [{"src": "img/f-apliu-0.jpg", "generic": false, "credit": "Bernard Spragg. NZ from Christchurch, Ne · CC0", "url": "https://commons.wikimedia.org/wiki/File:Flea_market.._Sham_Shui_Po_Hong_Kong_(15888325029).jpg"}, {"src": "img/f-apliu-o1.jpg", "generic": false, "credit": "Bernard Spragg · CC CC0 · Flickr", "url": "https://www.flickr.com/photos/88123769@N02/15888325029"}, {"src": "img/f-apliu-c4.jpg", "generic": false, "credit": "Bernard Spragg. NZ from Christchurch, Ne · CC0", "url": "https://commons.wikimedia.org/wiki/File:Sham_Shui_Po_Hong_Kong_(16072371561).jpg"}], "f-peiho": [{"src": "img/f-peiho-0.jpg", "generic": false, "credit": "Nai Soumiamrea · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E6%B7%B1%E6%B0%B4%E5%9F%97_Sham_Shui_Po_%E5%8C%97%E6%B2%B3%E8%A1%97_Pei_Ho_Street_Market_building_Tai_Nan_Street_Dec_2018_SSG.jpg"}], "f-fabric": [{"src": "img/f-fabric-r0.jpg", "generic": false, "credit": "姒姓賢寧 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Ki_Lung_Street,_Sham_Shui_Po_in_April_2022.jpg"}], "f-tainan": [{"src": "img/f-tainan-r0.jpg", "generic": false, "credit": "姒姓賢寧 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Street_signs_at_Tai_Nan_Street,_Sham_Shui_Po_in_December_2023.jpg"}], "f-timhowan": [{"src": "img/f-timhowan-0.jpg", "generic": false, "credit": "N509FZ · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Tim_Ho_Wan_restaurant_at_Sham_Shui_Po_(20190126130901).jpg"}, {"src": "img/f-timhowan-1.jpg", "generic": false, "credit": "Popo le Chien · CC0", "url": "https://commons.wikimedia.org/wiki/File:Tim_Ho_Wan_Baked_Pork_BBQ_buns.jpg"}, {"src": "img/f-timhowan-o2.jpg", "generic": true, "credit": "goodiesfirst · CC BY · Flickr", "url": "https://www.flickr.com/photos/49215102@N00/7797195198"}, {"src": "img/f-timhowan-o3.jpg", "generic": true, "credit": "goodiesfirst · CC BY · Flickr", "url": "https://www.flickr.com/photos/49215102@N00/7797195430"}, {"src": "img/f-timhowan-o4.jpg", "generic": false, "credit": "dckf_$êr@pH!nX · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/95464641@N00/8444758470"}, {"src": "img/f-timhowan-o5.jpg", "generic": false, "credit": "See-ming Lee (SML) · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/48973657@N00/7885046796"}, {"src": "img/f-timhowan-c7.jpg", "generic": false, "credit": "N509FZ · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Steamed_beef_meatballs_at_Tim_Ho_Wan,_Sham_Shui_Po_(20180908160733).jpg"}], "f-kungwo": [{"src": "img/f-kungwo-1.jpg", "generic": true, "credit": "CPJoseph · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:10_Thousand_Buddhas_Monastery_%E8%B1%86%E8%85%90%E8%8A%B1_Bean_Curd_2.jpg"}], "f-hopyik": [{"src": "img/f-hopyik-1.jpg", "generic": true, "credit": "MICDWIM YAINZ RPMMO · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_TST_%E5%B0%96%E6%B2%99%E5%92%80_Tsim_Sha_Tsui_%E7%B7%AC%E7%94%B8%E8%87%BA_3_Minden_Row_%E6%81%86%E6%98%9F%E6%A8%93_Star_Mansion_%E7%A8%BB%E9%A6%99%E9%9B%86%E5%9C%98_Tao_Heung_Restaurant_food_steamed_%E8%85%B8%E7%B2%89_rice_noodle_roll_%E8%B1%89%E6%B2%B9_soy_sauce_December_2022_Px3_04.jpg"}, {"src": "img/f-hopyik-r1.jpg", "generic": false, "credit": "MICDWIM YAINZ RPMMO · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_SSP_%E6%B7%B1%E6%B0%B4%E5%9F%97_Sham_Shui_Po_%E6%A1%82%E6%9E%97%E8%A1%97_Kweilin_Street_%E8%A1%97%E5%B8%82_outdoor_market_shop_%E6%9C%97%E7%9B%8A%E7%87%92%E5%91%B3%E5%B7%A5%E6%88%BF_Long_Yick_Roasted_Meat_Kitchen_%E7%87%92%E5%91%B3_siu_mei_December_2022_Px3_08.jpg"}], "f-lausum": [{"src": "img/f-lausum-1.jpg", "generic": true, "credit": "bryan... from Taipei, Taiwan · CC BY-SA 2.0", "url": "https://commons.wikimedia.org/wiki/File:Food_Macau,_%E6%8B%9B%E7%89%8C%E8%9D%A6%E5%AD%90%E6%92%88%E9%BA%B5,_%E9%BB%83%E6%9E%9D%E8%A8%98%E7%B2%A5%E9%BA%B5,_%E6%96%B0%E9%A6%AC%E8%B7%AF,_%E6%BE%B3%E9%96%80_(17310325981).jpg"}, {"src": "img/f-lausum-o1.jpg", "generic": true, "credit": "Razlan · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/75404268@N00/22634288545"}, {"src": "img/f-lausum-o2.jpg", "generic": true, "credit": "tuis · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/43068836@N00/5817414141"}], "f-kwankee": [{"src": "img/f-kwankee-1.jpg", "generic": true, "credit": "Tin ha Hon Tong Tai Chung · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_food_%E7%BC%BD%E4%BB%94%E7%B3%95_Put_chai_ko_%E7%B4%85%E8%B1%86%E7%A0%B5%E4%BB%94%E7%B3%95_Steamed_Red_Bean_Rice_Pudding_cakes_May_2017_IX1_01.jpg"}], "g-walled": [{"src": "img/g-walled-0.jpg", "generic": false, "credit": "姒姓賢寧 · CC0", "url": "https://commons.wikimedia.org/wiki/File:Kowloon_Walled_City_Park_in_October_2025.jpg"}, {"src": "img/g-walled-r1.jpg", "generic": false, "credit": "Wilfredor · CC0", "url": "https://commons.wikimedia.org/wiki/File:Hong_Kong_street_01.jpg"}, {"src": "img/g-walled-o2.jpg", "generic": false, "credit": "xopherlance · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/91673635@N00/1465994759"}, {"src": "img/g-walled-o3.jpg", "generic": false, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/8536030540"}, {"src": "img/g-walled-o4.jpg", "generic": false, "credit": "ystsoi · CC BY · Flickr", "url": "https://www.flickr.com/photos/136987764@N03/26969995429"}, {"src": "img/g-walled-o5.jpg", "generic": false, "credit": "dcmaster · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/76224602@N00/3249881515"}, {"src": "img/g-walled-c7.jpg", "generic": false, "credit": "B Clarke · CC BY 2.0", "url": "https://commons.wikimedia.org/wiki/File:Kowloon_Walled_City_Park,_original_Yamen.jpg"}], "g-houwong": [{"src": "img/g-houwong-0.jpg", "generic": false, "credit": "Wpcpey · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Hau_Wong_Temple_in_Kowloon_City_201605.jpg"}, {"src": "img/g-houwong-o1.jpg", "generic": false, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/8599435875"}, {"src": "img/g-houwong-o2.jpg", "generic": false, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/8600531306"}], "g-thai": [{"src": "img/g-thai-0.jpg", "generic": false, "credit": "Hoi Shing WANG · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B9%9D%E9%BE%8D%E5%9F%8E_Kln_City_%E5%9F%8E%E5%8D%97%E9%81%93_South_Wall_Road_Feb-2014_ZR2_shop_Thai_Fat_Restaurant.JPG"}, {"src": "img/g-thai-r1.jpg", "generic": true, "credit": "姒姓賢寧 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:Nam_Kok_Road,_Kowloon_City_in_June_2023.jpg"}, {"src": "img/g-thai-o2.jpg", "generic": true, "credit": "Can Pac Swire · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/18378305@N00/8526577784"}, {"src": "img/g-thai-o3.jpg", "generic": true, "credit": "lynac · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/39932276@N00/885229608"}, {"src": "img/g-thai-o4.jpg", "generic": true, "credit": "Razlan · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/75404268@N00/4587269870"}, {"src": "img/g-thai-o5.jpg", "generic": true, "credit": "Razlan · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/75404268@N00/4586644779"}, {"src": "img/g-thai-c7.jpg", "generic": false, "credit": "Shek Lai Ming Maizy · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_%E4%B9%9D%E9%BE%8D%E5%9F%8E_Kln_City_%E5%9F%8E%E5%8D%97%E9%81%93_South_Wall_Road_food_shop_January_2021_SSG_33.jpg"}], "g-hoiwah": [{"src": "img/g-hoiwah-0.jpg", "generic": false, "credit": "Shek Lai Ming Maizy · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Kln_City_%E4%B9%9D%E9%BE%8D%E5%9F%8E_Kowloon_City_%E8%A1%99%E5%89%8D%E5%9C%8D%E9%81%93_Nga_Tsin_Wai_Road_January_2021_SSG_08.jpg"}, {"src": "img/g-hoiwah-1.jpg", "generic": true, "credit": "Gedumkowtya HKSO · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_WC_%E7%81%A3%E4%BB%94_Wan_Chai_%E5%88%A9%E6%9D%B1%E8%A1%97_Lee_Tung_Avenue_shop_%E8%9B%8B%E6%92%BB%E7%8E%8B_King_Bakery_%E8%9B%8B%E6%92%BB_Egg_tarts_food_18pm_evening_July_2020_SS2.jpg"}, {"src": "img/g-hoiwah-o2.jpg", "generic": false, "credit": "DarkLight2021 · CC BY · Flickr", "url": "https://www.flickr.com/photos/194710534@N08/52417468567"}, {"src": "img/g-hoiwah-o3.jpg", "generic": false, "credit": "DarkLight2021 · CC BY · Flickr", "url": "https://www.flickr.com/photos/194710534@N08/52418419920"}, {"src": "img/g-hoiwah-c5.jpg", "generic": false, "credit": "Shek Lai Ming Maizy · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Kln_City_%E4%B9%9D%E9%BE%8D%E5%9F%8E_Kowloon_City_%E8%A1%99%E5%89%8D%E5%9C%8D%E9%81%93_Nga_Tsin_Wai_Road_January_2021_SSG_09.jpg"}], "g-lokhau": [{"src": "img/g-lokhau-0.jpg", "generic": false, "credit": "ken93110 · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:%E6%A8%82%E5%8F%A3%E7%A6%8F%E9%85%92%E5%AE%B6_-_panoramio.jpg"}, {"src": "img/g-lokhau-o1.jpg", "generic": true, "credit": "istolethetv · CC BY · Flickr", "url": "https://www.flickr.com/photos/44124401641@N01/7418991330"}], "g-chilin": [{"src": "img/g-chilin-0.jpg", "generic": false, "credit": "tlreed · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Chi_Lin_Nunnery_%E5%BF%97%E8%93%AE%E6%B7%A8%E8%8B%91_Pagoda_Pond_-_panoramio.jpg"}, {"src": "img/g-chilin-1.jpg", "generic": false, "credit": "Domust Jellifrea · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_WTS_%E9%91%BD%E7%9F%B3%E5%B1%B1_Diamond_Hill_%E5%BF%97%E8%93%AE%E5%87%88%E8%8B%91_Chi_Lin_Nunnery_December_2020_SS2_12.jpg"}, {"src": "img/g-chilin-o2.jpg", "generic": false, "credit": "See-ming Lee (SML) · CC BY · Flickr", "url": "https://www.flickr.com/photos/48973657@N00/8609498517"}, {"src": "img/g-chilin-o3.jpg", "generic": false, "credit": "Nathan O'Nions · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/50523792@N03/11421314935"}, {"src": "img/g-chilin-o4.jpg", "generic": false, "credit": "Nathan O'Nions · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/50523792@N03/12234097535"}, {"src": "img/g-chilin-o5.jpg", "generic": false, "credit": "mclcbooks · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/39877441@N05/36280752301"}], "h-tram": [{"src": "img/h-tram-0.jpg", "generic": false, "credit": "Mk2010 · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Peak_Tram_lower_terminus_station.jpg"}, {"src": "img/h-tram-1.jpg", "generic": false, "credit": "LN9267 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:6th_Generation_Peak_Tram_body_08-03-2022.jpg"}, {"src": "img/h-tram-o2.jpg", "generic": false, "credit": "keepexploringnz · CC BY-ND · Flickr", "url": "https://www.flickr.com/photos/74989579@N00/304652393"}, {"src": "img/h-tram-c5.jpg", "generic": false, "credit": "Jorge Láscar from Australia · CC BY 2.0", "url": "https://commons.wikimedia.org/wiki/File:Lascar_The_Peak_Tram_-_Lower_terminus_(4564319390).jpg"}], "h-bus15": [{"src": "img/h-bus15-0.jpg", "generic": false, "credit": "LN9267 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:3339_NWFB_15.jpg"}, {"src": "img/h-bus15-o1.jpg", "generic": false, "credit": "purdyrns · CC BY · Flickr", "url": "https://www.flickr.com/photos/15518132@N04/44917550862"}, {"src": "img/h-bus15-o2.jpg", "generic": false, "credit": "Let Ideas Compete · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/7200789@N06/3727111551"}, {"src": "img/h-bus15-c4.jpg", "generic": false, "credit": "LN9267 · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:3811_NWFB_15_25-11-2018.jpg"}], "h-peak": [{"src": "img/h-peak-0.jpg", "generic": false, "credit": "Hiroki Ogawa · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:Night_View_from_Lions_Pavilion_Victoria_Peak_Hong_Kong_-_panoramio.jpg"}, {"src": "img/h-peak-o1.jpg", "generic": false, "credit": "Doganowscy · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/14177443@N00/536253908"}, {"src": "img/h-peak-o2.jpg", "generic": false, "credit": "Roberto.Trombetta · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/29370225@N03/21992486263"}, {"src": "img/h-peak-o4.jpg", "generic": false, "credit": "johnlsl · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/22115899@N06/42050325640"}, {"src": "img/h-peak-c6.jpg", "generic": false, "credit": "Hiroki Ogawa · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:View_from_Lions_Pavilion_Victoria_Peak_Hong_Kong_-_panoramio_(1).jpg"}], "x-k11": [{"src": "img/x-k11-0.jpg", "generic": false, "credit": "YPSLEIAHEE · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_TST_%E5%B0%96%E6%B2%99%E5%92%80_Tsim_Sha_Tsui_%E6%A2%B3%E5%A3%AB%E5%B7%B4%E5%88%A9%E9%81%93_Salisbury_Road_K11_Musea_mall_December_2022_Px3_01.jpg"}, {"src": "img/x-k11-r1.jpg", "generic": false, "credit": "Wpcpey · CC BY 4.0", "url": "https://commons.wikimedia.org/wiki/File:Victoria_Dockside_202007.jpg"}, {"src": "img/x-k11-o2.jpg", "generic": false, "credit": "EddieWongF14 · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/54666070@N07/49164131782"}, {"src": "img/x-k11-c5.jpg", "generic": false, "credit": "YPSLEIAHEE · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:HK_TST_%E5%B0%96%E6%B2%99%E5%92%80_Tsim_Sha_Tsui_%E6%A2%B3%E5%A3%AB%E5%B7%B4%E5%88%A9%E9%81%93_Salisbury_Road_K11_Musea_mall_terrace_garden_%E5%AD%94%E9%9B%80_December_2022_Px3.jpg"}], "x-hysan": [{"src": "img/x-hysan-0.jpg", "generic": false, "credit": "(Uploader) · CC BY-SA 3.0", "url": "https://commons.wikimedia.org/wiki/File:Hysan_Place_Causeway_Bay_NOV13.jpg"}, {"src": "img/x-hysan-1.jpg", "generic": false, "credit": "User:Sengkang · Copyrighted free use", "url": "https://commons.wikimedia.org/wiki/File:Times_Square,_Hong_Kong,_Mar_06.JPG"}, {"src": "img/x-hysan-o2.jpg", "generic": false, "credit": "Ank.Kumar · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/182092789@N02/51735797419"}, {"src": "img/x-hysan-o4.jpg", "generic": false, "credit": "lipjin · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/78508065@N00/4021694245"}, {"src": "img/x-hysan-o5.jpg", "generic": false, "credit": "xiaming · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/76815233@N00/2439944379"}], "x-villain": [{"src": "img/x-villain-r0.jpg", "generic": false, "credit": "JavaSat26 at English Wikipedia(Origina · CC BY 3.0", "url": "https://commons.wikimedia.org/wiki/File:HK_Causeway_Bay_Canal_Road_West_Flyover_Route_4.jpg"}, {"src": "img/x-villain-r1.jpg", "generic": false, "credit": "Evancyk · CC BY-SA 4.0", "url": "https://commons.wikimedia.org/wiki/File:%22Villain_hitting%22_ceremony_in_Hong_Kong.jpg"}, {"src": "img/x-villain-o2.jpg", "generic": false, "credit": "Wilson Hui · CC BY · Flickr", "url": "https://www.flickr.com/photos/51942038@N04/25888196741"}, {"src": "img/x-villain-o3.jpg", "generic": false, "credit": "Bahi P · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/85549406@N00/48777119177"}], "x-leetung": [{"src": "img/x-leetung-0.jpg", "generic": false, "credit": "HKvkohsy OoHpital · CC0", "url": "https://commons.wikimedia.org/wiki/File:HK_WC_%E7%81%A3%E4%BB%94_Wan_Chai_%E5%88%A9%E6%9D%B1%E8%A1%97_Lee_Tung_Avenue_yellow_n_red_lanterns_night_March_2026_N13P_05.jpg"}, {"src": "img/x-leetung-o1.jpg", "generic": false, "credit": "kcma17 · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/139284050@N03/41407028372"}, {"src": "img/x-leetung-o2.jpg", "generic": false, "credit": "johnlsl · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/22115899@N06/31636233044"}], "d-kadorar": [{"src": "img/xa08.jpg", "generic": false, "xhs": true, "credit": "小紅書 @不会起名字的怪力少女", "url": "http://xhslink.com/o/3ykfaG7Gyqw"}, {"src": "img/xc08.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/d-kadorar-o0.jpg", "generic": true, "credit": "mischiru · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/87473264@N00/2461390326"}, {"src": "img/d-kadorar-o1.jpg", "generic": true, "credit": "redyamflan · CC BY-NC · Flickr", "url": "https://www.flickr.com/photos/10216416@N00/5865337324"}], "e-feijie": [{"src": "img/e-feijie-o0.jpg", "generic": true, "credit": "ttstam · CC BY-NC-SA · Flickr", "url": "https://www.flickr.com/photos/8812323@N08/3106974424"}, {"src": "img/e-feijie-o1.jpg", "generic": true, "credit": "One More Bite Blog · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/58951626@N06/9545452942"}, {"src": "img/e-feijie-o2.jpg", "generic": true, "credit": "ACaDeMiK · CC BY · Flickr", "url": "https://www.flickr.com/photos/66907809@N00/2522043297"}], "x-fatboy": [{"src": "img/xc03.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/x-fatboy-o2.jpg", "generic": true, "credit": "avlxyz · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/10559879@N00/2229944805"}, {"src": "img/x-fatboy-o3.jpg", "generic": true, "credit": "chumsdock · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/71136117@N00/3815690412"}], "x-danwong": [{"src": "img/xc10.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/x-danwong-o0.jpg", "generic": true, "credit": "leocomte26 · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/44934278@N04/50112114218"}], "x-asura": [{"src": "img/xc14.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}, {"src": "img/x-asura-o0.jpg", "generic": true, "credit": "djjewelz · CC BY-ND · Flickr", "url": "https://www.flickr.com/photos/67132301@N00/4509320949"}, {"src": "img/x-asura-o1.jpg", "generic": true, "credit": "djjewelz · CC BY-ND · Flickr", "url": "https://www.flickr.com/photos/67132301@N00/4509959708"}, {"src": "img/x-asura-o2.jpg", "generic": true, "credit": "avlxyz · CC BY-SA · Flickr", "url": "https://www.flickr.com/photos/10559879@N00/2153549995"}], "x-chungso": [{"src": "img/x-chungso-o2.jpg", "generic": true, "credit": "joeywan · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/83533850@N00/13963055835"}, {"src": "img/x-chungso-o3.jpg", "generic": true, "credit": "AmiSng · CC BY-NC-ND · Flickr", "url": "https://www.flickr.com/photos/75312712@N00/80689330"}], "x-vission": [{"src": "img/xc01.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}], "x-hesheeat": [{"src": "img/xc02.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}], "x-cookies": [{"src": "img/xc05.jpg", "generic": false, "xhs": true, "credit": "小紅書 @岳麓区吃饭组长", "url": "https://www.xiaohongshu.com/discovery/item/6aaa0d510000000028002295?xsec_source=app_share&type=normal&xsec_token=CBxXpjS3p63w3DQf4wpuflpM-aVn26WCTqgfGpSNM1LGY="}]};
+const ITIN = [
+ {dn:'DAY 1 · 星期六 11/14',title:'到港、灣仔、維港夜',sub:'到飯店 14:45 才開始。下午一個區塊，晚上過海。',items:[
+   ['12:20','落地。A11 巴士到灣仔，14:15 到飯店，14:45 出門。','A'],
+   ['15:00','<b>再興燒臘</b>午餐。星期六是這趟唯一能吃到的日子。','A'],
+   ['16:00','太原街街市、藍屋，走 8 分鐘範圍內慢慢晃。順路到大王東街 <b>Bakehouse</b> 排蛋撻（18:00 關，排 20–40 分鐘，派兩個人去排就好）。','A'],
+   ['17:00','星街月街日街喝咖啡坐一小時。<small>有力氣的版本：改搭叮叮車到中環街市坐，順便買泰昌蛋撻。</small>','A','opt'],
+   ['18:15','飯店旁灣仔碼頭上天星小輪，8 分鐘過海，剛好日落。','D'],
+   ['18:30','星光大道慢慢走、找長椅坐，看天黑燈亮。旁邊 <b>K11 MUSEA</b> 進去看一眼中庭，這是你們這趟唯一要「看」的商場。','D'],
+   ['20:00','幻彩詠香江燈光秀，10 分鐘。','D'],
+   ['20:30','晚餐三選一：<b>池記</b>雲吞麵（尖沙咀樂道，6 人好坐）、<b>麥文記</b>（佐敦，安靜）、澳洲牛奶公司（快、兇、拆桌）。','D'],
+   ['21:30','廟街夜市，順路看油麻地果欄。<small>長輩版：晚餐後直接搭小輪回飯店。</small>','D','opt'],
+   ['22:30','尖沙咀碼頭天星小輪回灣仔，尾班約 22:50。上岸走 8 分鐘到莊士敦道<b>聰。C Dessert</b>吃楊枝甘露收尾（週六開到 00:00）。','A'],
+ ]},
+ {dn:'DAY 2 · 星期日 11/15',title:'深水埗、太子、旺角；晚上銅鑼灣、大坑',sub:'深水埗→太子→旺角是同一條地鐵線連著的三站，全程走路加一站車。晚上回港島看一次商場、吃登龍街、走大坑回家。',items:[
+   ['09:00','地鐵灣仔 → 金鐘 → 深水埗，約 25 分鐘。','F'],
+   ['09:30','早餐：<b>合益泰腸粉</b>＋<b>公和豆腐花</b>，兩家走路 2 分鐘。','F'],
+   ['10:30','鴨寮街、北河街街市、布料鈕扣街，邊走邊看。','F'],
+   ['11:30','大南街咖啡店坐下來。','F'],
+   ['12:30','午餐：<b>添好運</b>點心（6 人可能坐一桌）或劉森記竹昇麵。','F'],
+   ['14:00','地鐵一站到太子（2 分鐘）：花墟、雀鳥花園，安靜慢走。','E'],
+   ['15:00','<b>金華冰廳</b>菠蘿油下午茶，坐一下。','E'],
+   ['16:00','太子走 10 分鐘到旺角，女人街看霓虹路過就好，不買。弼街<b>旦王</b>酸辣粉、朗豪坊對面<b>曲奇四重奏</b>買伴手禮，都順路。<small>累的人先回飯店：地鐵旺角 → 金鐘 → 灣仔 25 分鐘。</small>','E','opt'],
+   ['17:30','地鐵旺角 → 金鐘 → 銅鑼灣（25 分鐘）。<b>希慎廣場</b>樓上誠品、<b>時代廣場</b>各看一眼，10 分鐘走完。','B'],
+   ['18:30','晚餐二選一：希慎 B2 <b>泰沾麵</b>泰式船麵（有冷氣、6 人好坐、點豚肉湯底），或<b>登龍街</b>幾十家隨便挑。','B'],
+   ['20:00','走 10 分鐘到<b>大坑</b>小巷散步、喝一杯。回程經<b>鵝頸橋</b>看打小人（晚上多半收了，白天經過才看得到），走 20 分鐘回灣仔。<small>備案：不去銅鑼灣，改回油麻地補吃：碧街通達魚蛋、嘉多娜布甸包、和順記炸雞腿三家 50 米內，晚餐華嫂冰室或池記，小輪回灣仔。</small>','B','opt'],
+ ]},
+ {dn:'DAY 3 · 星期一 11/16',title:'中環早茶、九龍城寨、傍晚高鐵',sub:'早上退房寄行李。16:30 前回飯店，18:54 的車。',items:[
+   ['07:30','退房，行李寄飯店櫃台。地鐵或叮叮車到中環。','C'],
+   ['08:00','<b>陸羽茶室</b>早茶，一盅兩件坐 1.5 小時。1933 年老茶樓，這趟最「坐得久」的一餐。<small>不想跑中環：飯店走 10 分鐘的<b>金輝點心茶餐廳</b>（05:30–16:00，本地人早茶，便宜一半）；或蘭芳園絲襪奶茶＋豬扒包（週一有開）。</small>','C'],
+   ['09:45','地鐵中環 → 金鐘 → 何文田 → 宋皇臺，約 30 分鐘。','G'],
+   ['10:30','<b>九龍寨城公園</b>＋衙門電影場景展，抓 2 小時。旁邊侯王廟 15 分鐘。','G'],
+   ['12:30','午餐：城南道<b>泰國菜</b>（6 人好坐）或樂口福。豪華餅店買蛋撻帶上車。','G'],
+   ['14:00','地鐵兩站到鑽石山<b>南蓮園池</b>坐一個下午，有茶館。<small>累了就跳過，直接回飯店。</small>','G','opt'],
+   ['16:00','回灣仔拿行李，約 35 分鐘。','A'],
+   ['17:00','兩台計程車到西九龍站，約 20 分鐘、各約 HK$120。','D'],
+   ['17:30','西九龍站過關（香港出境＋中國入境一次辦完）。','D'],
+   ['18:54','<b>G6550 → 廣州東 20:26</b>。天河市中心，到飯店約 21:00。','D'],
+ ]},
+];
+
+// ---------- projection & map ----------
+const LON0=114.124, LON1=114.216, LAT0=22.262, LAT1=22.348, W=1000, H=1010;
+const px=lon=>(lon-LON0)/(LON1-LON0)*W, py=lat=>(LAT1-lat)/(LAT1-LAT0)*H;
+const P=(lon,lat)=>px(lon)+','+py(lat);
+const poly=pts=>pts.map(p=>P(p[0],p[1])).join(' ');
+const ISLAND=[[114.120,22.284],[114.135,22.2872],[114.142,22.2885],[114.150,22.2888],[114.157,22.2882],[114.162,22.2866],[114.166,22.2842],[114.171,22.2838],[114.176,22.2832],[114.182,22.2830],[114.189,22.2858],[114.196,22.2900],[114.205,22.2918],[114.225,22.2925],[114.225,22.250],[114.120,22.250]];
+const KOWLOON=[[114.120,22.360],[114.140,22.345],[114.148,22.341],[114.152,22.332],[114.155,22.321],[114.157,22.312],[114.158,22.303],[114.161,22.2955],[114.166,22.2932],[114.1695,22.2928],[114.174,22.2935],[114.180,22.2962],[114.186,22.3000],[114.191,22.3030],[114.196,22.3055],[114.205,22.3025],[114.212,22.3065],[114.208,22.3160],[114.225,22.322],[114.225,22.360]];
+const LINES=[
+ {name:'港島線',color:'#0860A8',pts:[[114.1285,22.2815],[114.136,22.2848],[114.1425,22.2855],[114.1515,22.2865],[114.158,22.2820],[114.1645,22.2790],[114.173,22.2778],[114.184,22.2800],[114.192,22.2825],[114.194,22.2880],[114.200,22.2910],[114.212,22.2915]]},
+ {name:'荃灣線',color:'#E2231A',pts:[[114.158,22.2820],[114.1645,22.2790],[114.1720,22.2975],[114.1715,22.3048],[114.1705,22.3130],[114.1695,22.3192],[114.1683,22.3245],[114.1625,22.3305],[114.1560,22.3358],[114.148,22.337],[114.140,22.343]]},
+ {name:'屯馬線',color:'#9C2E00',pts:[[114.140,22.330],[114.154,22.327],[114.166,22.304],[114.174,22.2955],[114.182,22.303],[114.183,22.309],[114.188,22.317],[114.1915,22.326],[114.199,22.330],[114.202,22.340],[114.205,22.348]]},
+ {name:'東鐵線',color:'#53B7E8',pts:[[114.176,22.281],[114.182,22.303],[114.173,22.322],[114.176,22.337],[114.178,22.348]]},
+];
+const TRAM=[[114.126,22.2818],[114.142,22.2865],[114.150,22.2870],[114.158,22.2845],[114.165,22.2800],[114.173,22.2785],[114.184,22.2795],[114.192,22.2830],[114.200,22.2905],[114.212,22.2910]];
+const FERRY=[[[114.1748,22.2826],[114.1690,22.2930]],[[114.1600,22.2870],[114.1690,22.2930]]];
+const STATIONS=[['堅尼地城',114.1285,22.2815,-1],['西營盤',114.1425,22.2855,-1],['上環',114.1515,22.2865,-1],['中環',114.158,22.2820,1],['金鐘',114.1645,22.2790,1],['灣仔',114.173,22.2778,1],['銅鑼灣',114.184,22.2800,1],['天后',114.192,22.2825,1],['北角',114.200,22.2910,1],['尖沙咀',114.1720,22.2975,1],['佐敦',114.1715,22.3048,1],['油麻地',114.1705,22.3130,1],['旺角',114.1695,22.3192,1],['太子',114.1683,22.3245,1],['深水埗',114.1625,22.3305,-1],['宋皇臺',114.1915,22.326,1],['鑽石山',114.202,22.340,1],['柯士甸／西九龍',114.166,22.304,-1],['紅磡',114.182,22.303,1],['何文田',114.183,22.309,1]];
+
+const svg=document.getElementById('map');
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={},parent)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(parent)parent.appendChild(e);return e};
+function drawBase(){
+  const g=el('g',{id:'base'},svg);
+  el('polygon',{points:poly(ISLAND),fill:'var(--land)',stroke:'var(--muted)','stroke-width':1.4,'stroke-opacity':.5,'stroke-linejoin':'round'},g);
+  el('polygon',{points:poly(KOWLOON),fill:'var(--land)',stroke:'var(--muted)','stroke-width':1.4,'stroke-opacity':.5,'stroke-linejoin':'round'},g);
+  el('ellipse',{cx:px(114.150),cy:py(22.2705),rx:px(114.162)-px(114.150),ry:py(22.2705)-py(22.279),fill:'var(--peak)',stroke:'none'},g);
+  el('text',{x:px(114.178),y:py(22.2895),class:'sea-lbl','text-anchor':'middle'},g).textContent='維 多 利 亞 港';
+  el('text',{x:px(114.150),y:py(22.2695),class:'stn','text-anchor':'middle',style:'font-size:11px'},g).textContent='太平山';
+  // tram
+  el('polyline',{points:poly(TRAM),fill:'none',stroke:'var(--muted)','stroke-width':1.6,'stroke-dasharray':'2 4',opacity:.8},g);
+  // ferries
+  FERRY.forEach(f=>el('polyline',{points:poly(f),fill:'none',stroke:'var(--cA)','stroke-width':1.5,'stroke-dasharray':'1 5',opacity:.9},g));
+  // MTR
+  LINES.forEach(l=>{el('polyline',{points:poly(l.pts),fill:'none',stroke:l.color,'stroke-width':3.2,'stroke-linejoin':'round','stroke-linecap':'round',opacity:.85},g)});
+  STATIONS.forEach(s=>{el('circle',{cx:px(s[1]),cy:py(s[2]),r:3.2,fill:'var(--surface)',stroke:'var(--ink)','stroke-width':1.2},g);
+    el('text',{x:px(s[1])+(s[3]>0?7:-7),y:py(s[2])+3.5,class:'stn','text-anchor':s[3]>0?'start':'end'},g).textContent=s[0]});
+}
+let clusterLayer, pinLayer, labelLayer;
+function drawClusters(){
+  clusterLayer=el('g',{id:'clusters'},svg);
+  for(const k in CL){
+    const ps=POIS.filter(p=>p.cl===k && !(p.type==='transit' && p.id.startsWith('t-')));
+    if(!ps.length)continue;
+    const xs=ps.map(p=>px(p.lng)),ys=ps.map(p=>py(p.lat));
+    const pad=22,x=Math.min(...xs)-pad,y=Math.min(...ys)-pad,w=Math.max(...xs)-x+pad,h=Math.max(...ys)-y+pad;
+    const g=el('g',{'data-cl':k},clusterLayer);
+    el('rect',{x,y,width:w,height:h,rx:14,fill:CL[k].color,'fill-opacity':.10,stroke:CL[k].color,'stroke-width':1.2,'stroke-opacity':.55,'stroke-dasharray':'4 3'},g);
+    const t=el('text',{x:x+8,y:y+18,class:'cll',fill:CL[k].color},g);t.textContent=k+' '+CL[k].name.replace(/（.*）/,'');
+  }
+}
+const SHAPES={
+ food:(g,c)=>el('circle',{cx:0,cy:0,r:6.5,class:'core',fill:c,stroke:'var(--surface)','stroke-width':1.6},g),
+ sight:(g,c)=>el('rect',{x:-5.5,y:-5.5,width:11,height:11,rx:1.5,transform:'rotate(45)',class:'core',fill:'var(--surface)',stroke:c,'stroke-width':2.2},g),
+ stay:(g,c)=>{el('rect',{x:-8,y:-8,width:16,height:16,rx:3,class:'core',fill:c,stroke:'var(--surface)','stroke-width':1.6},g);el('text',{x:0,y:4,'text-anchor':'middle',fill:'#fff',style:'font:700 10px var(--sans);pointer-events:none'},g).textContent='H'},
+ transit:(g,c)=>el('polygon',{points:'0,-7 6.5,5 -6.5,5',class:'core',fill:'var(--surface)',stroke:c,'stroke-width':2},g),
+};
+function drawPins(){
+  pinLayer=el('g',{id:'pins'},svg);labelLayer=el('g',{id:'labels'},svg);
+  POIS.forEach(p=>{
+    const c=CL[p.cl].color;
+    const g=el('g',{class:'pin '+p.type,'data-id':p.id,'data-cl':p.cl,'data-type':p.type,transform:`translate(${px(p.lng)} ${py(p.lat)})`,tabindex:0,role:'button','aria-label':p.name},pinLayer);
+    el('circle',{cx:0,cy:0,r:11,class:'ring',fill:'none',stroke:'var(--ok)','stroke-width':2},g);
+    SHAPES[p.type](g,c);
+    g.addEventListener('click',()=>select(p.id));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(p.id)}});
+    g.addEventListener('pointerenter',e=>showTip(e,p.name));g.addEventListener('pointermove',e=>showTip(e,p.name));g.addEventListener('pointerleave',hideTip);
+    const l=el('text',{x:px(p.lng)+9,y:py(p.lat)+3.5,class:'lbl','data-id':p.id},labelLayer);l.textContent=p.name.replace(/（.*?）/,'').replace(/ · .*/,'');
+  });
+}
+const tip=document.getElementById('tip');
+function showTip(e,t){tip.textContent=t;tip.style.display='block';tip.style.left=e.clientX+'px';tip.style.top=e.clientY+'px'}
+function hideTip(){tip.style.display='none'}
+
+// zoom / pan
+let vb={x:0,y:0,w:W,h:H};
+function applyVB(){svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);const k=Math.sqrt(vb.w/W);labelLayer.style.display=(showLabels||vb.w<W*.6)?'block':'none';labelLayer.setAttribute('font-size',10.5*k);pinLayer.setAttribute('transform','');}
+function zoomAt(f,cx,cy){const nw=Math.min(W*1.4,Math.max(W*.15,vb.w*f));const nh=nw*H/W;const rx=(cx-vb.x)/vb.w,ry=(cy-vb.y)/vb.h;vb={x:cx-rx*nw,y:cy-ry*nh,w:nw,h:nh};applyVB()}
+function clientToSvg(e){const r=svg.getBoundingClientRect();return{x:vb.x+(e.clientX-r.left)/r.width*vb.w,y:vb.y+(e.clientY-r.top)/r.height*vb.h}}
+svg.addEventListener('wheel',e=>{e.preventDefault();const p=clientToSvg(e);zoomAt(e.deltaY>0?1.15:0.87,p.x,p.y)},{passive:false});
+let drag=null;
+svg.addEventListener('pointerdown',e=>{if(e.target.closest('.pin'))return;drag={x:e.clientX,y:e.clientY,vb:{...vb}};svg.classList.add('dragging');svg.setPointerCapture(e.pointerId)});
+svg.addEventListener('pointermove',e=>{if(!drag)return;const r=svg.getBoundingClientRect();vb.x=drag.vb.x-(e.clientX-drag.x)/r.width*vb.w;vb.y=drag.vb.y-(e.clientY-drag.y)/r.height*vb.h;applyVB()});
+svg.addEventListener('pointerup',()=>{drag=null;svg.classList.remove('dragging')});svg.addEventListener('pointercancel',()=>{drag=null;svg.classList.remove('dragging')});
+document.getElementById('zin').onclick=()=>zoomAt(.75,vb.x+vb.w/2,vb.y+vb.h/2);
+document.getElementById('zout').onclick=()=>zoomAt(1.33,vb.x+vb.w/2,vb.y+vb.h/2);
+document.getElementById('zreset').onclick=()=>{vb={x:0,y:0,w:W,h:H};applyVB()};
+
+// ---------- state ----------
+const KEY='hk-trip-status-v1';
+let status={};try{status=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){status={}}
+function saveStatus(){try{localStorage.setItem(KEY,JSON.stringify(status))}catch(e){}}
+let showLabels=false, activeCl=null, activeType=null, selected=null;
+
+// ---------- filters ----------
+const filters=document.getElementById('filters');
+function buildFilters(){
+  filters.innerHTML='';
+  const all=document.createElement('button');all.className='chip';all.textContent='全部區塊';all.setAttribute('aria-pressed',activeCl===null);all.onclick=()=>{activeCl=null;refresh()};filters.appendChild(all);
+  for(const k in CL){const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',CL[k].color);b.innerHTML=`<span class="dot"></span>${k} ${CL[k].name}`;b.setAttribute('aria-pressed',activeCl===k);b.onclick=()=>{activeCl=activeCl===k?null:k;refresh()};filters.appendChild(b)}
+  const sep=document.createElement('span');sep.style.cssText='width:1px;height:18px;background:var(--line);margin:0 4px';filters.appendChild(sep);
+  [['food','只看吃'],['sight','只看走走看看']].forEach(([t,n])=>{const b=document.createElement('button');b.className='chip';b.textContent=n;b.setAttribute('aria-pressed',activeType===t);b.onclick=()=>{activeType=activeType===t?null:t;refresh()};filters.appendChild(b)});
+  const lab=document.createElement('label');lab.className='toggle';lab.innerHTML=`<input type="checkbox" id="lbltoggle" ${showLabels?'checked':''}> 顯示名稱`;filters.appendChild(lab);
+  lab.querySelector('input').onchange=e=>{showLabels=e.target.checked;applyVB()};
+}
+function visible(p){if(activeCl&&p.cl!==activeCl)return false;if(activeType&&p.type!==activeType&&p.type!=='stay')return false;return true}
+function refresh(){
+  buildFilters();
+  POIS.forEach(p=>{const g=pinLayer.querySelector(`[data-id="${p.id}"]`),l=labelLayer.querySelector(`[data-id="${p.id}"]`);const on=visible(p);g.style.display=on?'':'none';l.style.display=on?'':'none';g.classList.toggle('no',status[p.id]==='no');g.classList.toggle('go',status[p.id]==='go');g.classList.toggle('sel',selected===p.id)});
+  clusterLayer.querySelectorAll('g').forEach(g=>{g.style.opacity=activeCl&&g.dataset.cl!==activeCl?.25:1});
+  buildList();
+}
+
+// ---------- list ----------
+const listEl=document.getElementById('poilist');
+function buildList(){
+  listEl.innerHTML='';
+  for(const k in CL){
+    const ps=POIS.filter(p=>p.cl===k&&visible(p));if(!ps.length)continue;
+    const goN=ps.filter(p=>status[p.id]==='go').length,noN=ps.filter(p=>status[p.id]==='no').length;
+    const card=document.createElement('div');card.className='clcard';card.style.setProperty('--c',CL[k].color);
+    card.innerHTML=`<header><span class="letter">${k}</span><h3>${CL[k].name}</h3><small>${goN} 去 · ${noN} 不去 · ${ps.length} 點</small></header><ul></ul>`;
+    const ul=card.querySelector('ul');
+    ps.forEach(p=>{const li=document.createElement('li');li.className=status[p.id]||'';li.setAttribute('aria-current',selected===p.id);const th=(IMGS[p.id]||[])[0];li.innerHTML=`<i class="lg ${p.type}"></i>${th?`<img class="th" src="${th.src}" loading="lazy" alt="">`:''}<span class="nm">${p.name}</span><span class="hrs">${p.v?'✓':''}${shortHours(p.hours)}</span>`;li.onclick=()=>select(p.id);ul.appendChild(li)});
+    listEl.appendChild(card);
+  }
+}
+function shortHours(h){if(!h)return'';const m=h.match(/\d{1,2}:\d{2}[–-]\d{1,2}:\d{2}/);return m?m[0]:(h.includes('待核實')?'待核實':'')}
+
+// ---------- panel ----------
+const panel=document.getElementById('panel');
+function renderPanelHome(){
+  panel.innerHTML=`<div class="eyebrow">怎麼用這張圖</div><h2>八個區塊，先挑要去的</h2>
+  <p class="desc">每個區塊都是「走路就能逛完」的範圍。點地圖上的圖釘或下方清單，右邊會出現說明、營業時間，還有跳去 OpenRice、Google Maps、小紅書看照片和評價的按鈕。</p>
+  <p class="desc">看完按「去／不去／待定」。狀態存在這台電腦，砍完剩下的就是最終版。</p>
+  <p class="desc">每一點都附照片，點小圖在頁內放大，不會跳出去。標「實景」的是那家店或那條街本尊；標「示意」的是同一種食物或附近街景，因為公開圖庫沒有那家店的照片。</p>
+  <dl class="kv">${Object.keys(CL).map(k=>`<dt><span class="badge" style="background:${CL[k].color};color:#fff">${k}</span></dt><dd><b>${CL[k].name}</b><br><span class="hint">${CL[k].desc}</span></dd>`).join('')}</dl>
+  <p class="hint" style="margin-top:14px">✓ ＝ 2026-09-16 已核實的營業時間。虛線框是區塊範圍，藍點線是天星小輪，灰虛線是叮叮車，粗實線是地鐵。</p>`;
+}
+function photos(id){
+  const arr=IMGS[id]||[];if(!arr.length)return '<p class="hint" style="margin-top:12px">這一點在公開圖庫找不到合適的照片，按下面 OpenRice 或小紅書看。</p>';
+  return `<div class="photos">${arr.map((m,i)=>`<figure><img src="${m.src}" loading="lazy" alt="" data-id="${id}" data-i="${i}"><figcaption>${m.xhs?'小紅書實拍':m.generic?'示意／附近街景':'實景'}</figcaption></figure>`).join('')}</div>`;
+}
+function openLB(id,i){
+  const arr=IMGS[id];if(!arr)return;const m=arr[i];const p=POIS.find(x=>x.id===id);
+  const lb=document.getElementById('lb');lb.hidden=false;document.body.style.overflow='hidden';
+  lb.querySelector('img').src=m.src;
+  lb.querySelector('.lbcap').innerHTML=`<b>${p.name}</b> · ${m.xhs?'小紅書網友實拍':m.generic?'示意圖或附近街景，非該店本尊':'實景'}<br><small>照片：${m.credit}${m.xhs?'（僅供家人行前參考，點「小紅書原貼文」看原文）':'（CC 授權）'}</small>`;
+  lb.dataset.id=id;lb.dataset.i=i;lb.querySelector('.lbn').textContent=`${i+1} / ${arr.length}`;
+}
+function lbStep(d){const lb=document.getElementById('lb');const arr=IMGS[lb.dataset.id];let i=(+lb.dataset.i+d+arr.length)%arr.length;openLB(lb.dataset.id,i)}
+function closeLB(){document.getElementById('lb').hidden=true;document.body.style.overflow=''}
+document.addEventListener('click',e=>{const im=e.target.closest('.photos img');if(im)openLB(im.dataset.id,+im.dataset.i)});
+document.addEventListener('keydown',e=>{const lb=document.getElementById('lb');if(lb.hidden)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')lbStep(1);if(e.key==='ArrowLeft')lbStep(-1)});
+function select(id){
+  selected=id;const p=POIS.find(x=>x.id===id);const c=CL[p.cl];
+  const q=encodeURIComponent(p.name.replace(/（.*?）/,'')+' 香港');
+  const gm=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name.replace(/（.*?）/,'')+' '+p.addr.split(' ·')[0]+' 香港')}`;
+  const or=`https://www.openrice.com/zh/hongkong/restaurants?what=${encodeURIComponent(p.name.replace(/（.*?）/,''))}`;
+  const xhs=`https://www.xiaohongshu.com/search_result?keyword=${q}`;
+  const typeName={food:'吃',sight:'走走看看',stay:'住宿',transit:'交通'}[p.type];
+  panel.innerHTML=`<div class="eyebrow"><span class="sw" style="--c:${c.color}"></span>${p.cl} · ${c.name} · ${typeName}</div>
+  <h2>${p.name}</h2><div class="addr">${p.addr}</div>
+  <div class="badges">${p.v?'<span class="badge ok">✓ 已核實 2026-09</span>':'<span class="badge warn">營業時間待核實</span>'}${p.eat?`<span class="badge">必點：${p.eat}</span>`:''}${p.beef?`<span class="badge warn">🐂 ${p.beef}</span>`:''}</div>
+  <dl class="kv"><dt>時間</dt><dd class="mono" style="font-size:13px">${p.hours||'—'}</dd>${p.note?`<dt>備註</dt><dd>${p.note}</dd>`:''}</dl>
+  <p class="desc">${p.desc}</p>
+  ${photos(id)}
+  <div class="links"><a href="${gm}" target="_blank" rel="noopener">Google Maps</a>${p.type==='food'?`<a href="${or}" target="_blank" rel="noopener">OpenRice 評價</a>`:''}${(p.xhs||[]).map((u,i)=>`<a href="${u}" target="_blank" rel="noopener">小紅書原貼文${p.xhs.length>1?' '+(i+1):''}</a>`).join('')}<a href="${xhs}" target="_blank" rel="noopener">小紅書搜尋</a></div>
+  <div class="status"><span>這一點：</span>
+    <button class="go" aria-pressed="${status[id]==='go'}" data-s="go">去</button>
+    <button aria-pressed="${!status[id]||status[id]==='maybe'}" data-s="maybe">待定</button>
+    <button class="no" aria-pressed="${status[id]==='no'}" data-s="no">不去</button></div>`;
+  panel.querySelectorAll('.status button').forEach(b=>b.onclick=()=>{status[id]=b.dataset.s;saveStatus();select(id)});
+  refresh();
+  const g=pinLayer.querySelector(`[data-id="${id}"]`);if(g&&window.innerWidth>900){/* keep map */}
+  if(window.innerWidth<=900)panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ---------- itinerary ----------
+function buildDays(){
+  const root=document.getElementById('days');
+  ITIN.forEach(d=>{const s=document.createElement('article');s.className='day';
+    s.innerHTML=`<header><div class="dn">${d.dn}</div><h3>${d.title}</h3><p>${d.sub}</p></header><ol class="tl">${d.items.map(it=>`<li><span class="t">${it[0]}</span><span class="what">${it[1]}<span class="cl" style="--c:${CL[it[2]].color}">${it[2]}</span>${it[3]?'<span class="opt">長輩可略</span>':''}</span></li>`).join('')}</ol>`;
+    root.appendChild(s)});
+}
+
+// ---------- tabs ----------
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('section[role="tabpanel"]').forEach(s=>s.hidden=s.id!==b.getAttribute('aria-controls'));
+});
+
+drawBase();drawClusters();drawPins();applyVB();renderPanelHome();refresh();buildDays();
+</script>
+
+</body>
+</html>
